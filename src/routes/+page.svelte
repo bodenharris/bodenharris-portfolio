@@ -35,40 +35,89 @@
     </button>
     <hr class="border-t-2 {borderColor}">
     <h2 class="text-lg ">blharris@umass.edu</h2>
-    <p class=" mt-4 border {borderColor} rounded-lg w-1/2 h-auto p-3" >
-        <b class="font-bold text-2xl">About me: </b><br>
-        I am a freshman at the UMass Amerst Commonwealth Honors College studying Computer science.<br>I am currently on track to graduate in the winter of 2026. 
-    </p>
-    <button class="absolute right-4 top-15 rounded-full">    
-        <img src="profile.jpg" alt="" class="h-96 w-96 rounded-full ring-6 ring-gray-500">
-    </button>
-    <p class="mt-4 border {borderColor} rounded-lg w-1/2 h-auto p-1 flex items-center space-x-2">
-        <a href="Boden Harris - Resume.pdf" class="text-blue-400 inline-block hover:text-blue-600 p-3" target="_blank">
-            View My Resume
-        </a> 
-        <button 
-        class="w-12 h-12 flex items-center justify-center rounded-full {bgColor} {hoverColor} focus:outline-none focus:ring-2 focus:ring-blue-500"
-        aria-label="Download Resume"
-        on:click={downloadResume}>
-            <img src="downloadIcon.png" alt="Download Icon" class="w-[32px] h-[32px]" style="{nightMode ? 'filter: invert(1)' : ''}">
-        </button>
-    </p>
-    <div class="mt-4 border {borderColor} rounded-lg w-1/2 h-auto p-3">
-        <b class="font-bold text-2xl">Skills: </b><br>
-        <ul class="list-disc list-inside">
-            <li>Java</li>
-            <li>C</li>
-            <li>Python</li>
-            <li>Svelte</li>
-            <li>HTML</li>
-            <li>CSS</li>
-            <li>JavaScript</li>
-        </ul>
+    <div class="flex flex-row items-start">
+        <div class="flex-1">
+            <p class=" mt-4 border {borderColor} rounded-lg w-1/2 h-auto p-3" >
+                <b class="font-bold text-2xl">About me: </b><br>
+                I am a freshman at the UMass Amherst Commonwealth Honors College studying Computer science.<br>I am currently on track to graduate in the winter of 2026. 
+            </p>
+            <p class="mt-4 border {borderColor} rounded-lg w-1/2 h-auto p-1 flex items-center space-x-2">
+                <a href="Boden Harris - Resume.pdf" class="text-blue-400 inline-block hover:text-blue-600 p-3" target="_blank">
+                    View My Resume
+                </a> 
+                <button 
+                class="w-12 h-12 flex items-center justify-center rounded-full {bgColor} {hoverColor} focus:outline-none focus:ring-2 focus:ring-blue-500"
+                aria-label="Download Resume"
+                on:click={downloadResume}>
+                    <img src="downloadIcon.png" alt="Download Icon" class="w-[32px] h-[32px]" style="{nightMode ? 'filter: invert(1)' : ''}">
+                </button>
+            </p>
+            <div class="mt-4 border {borderColor} rounded-lg w-1/2 h-auto p-3">
+                <b class="font-bold text-2xl">Skills: </b><br>
+                <ul class="list-disc list-inside">
+                    <li>Java</li>
+                    <li>C</li>
+                    <li>Python</li>
+                    <li>Svelte</li>
+                    <li>HTML</li>
+                    <li>CSS</li>
+                    <li>JavaScript</li>
+                </ul>
+            </div>
+            <div class="mt-4 border {borderColor} rounded-lg h-auto p-3">
+                <b class="font-bold text-2xl">Projects: </b><br>
+            </div>
+        </div>
+        
+        <div class="flex justify-end mt-4 flex-col items-center space-y-6">
+        <!-- Profile Picture -->
+        <img src="profile.jpg" alt="Profile" class="h-96 w-96 rounded-full ring-6 ring-gray-500">
+
+        <!-- Connect with Me Box -->
+        <div class="mt-6 border {borderColor} rounded-2xl p-6 w-96 text-center {bgColor} shadow-lg">
+            <h3 class="text-2xl font-bold mb-4">Connect with Me</h3>
+            <div class="flex justify-center space-x-6 mb-4">
+                <!-- GitHub -->
+                <a href="https://github.com/bodenharris" target="_blank" class="transition transform hover:scale-110">
+                    <img src="github.png" alt="GitHub" class="w-10 h-10" style="{nightMode ? 'filter: invert(1)' : ''}">
+                </a>
+
+                <!-- LinkedIn -->
+                <a href="https://www.linkedin.com/in/boden-harris-a74897326/" target="_blank" class="transition transform hover:scale-110">
+                    <img src="linkedin.png" alt="LinkedIn" class="w-10 h-10" style="{nightMode ? 'filter: invert(1)' : ''}">
+                </a>
+
+                <!-- Instagram -->
+                <a href="https://www.instagram.com/bodenharris523/" target="_blank" class="transition transform hover:scale-110">
+                    <img src="instagram.png" alt="Instagram" class="w-10 h-10" style="{nightMode ? 'filter: invert(1)' : ''}">
+                </a>
+
+                <!-- Discord-->
+                <a href="https://discord.com/users/1276287236106883177" target="_blank" class="transition transform hover:scale-110">
+                    <img src="discord.png" alt="Discord" class="w-10 h-10" style="{nightMode ? 'filter: invert(1)' : ''}">
+                </a>
+            </div>
+
+            <!-- Email Form -->
+            <form action="mailto:blharris@umass.edu" method="post" enctype="text/plain" class="flex flex-col space-y-3">
+                <input 
+                    type="email" 
+                    placeholder="Your email address" 
+                    class="p-2 rounded-md border {borderColor} focus:ring-2 focus:ring-blue-500 {textColor} {bgColor}" 
+                    required>
+                <textarea 
+                    placeholder="Your message..." 
+                    class="p-2 rounded-md border {borderColor} focus:ring-2 focus:ring-blue-500 {textColor} {bgColor}" 
+                    rows="3" required></textarea>
+                <button 
+                    type="submit" 
+                    class="rounded-md py-2 {bgColor} {hoverColor} border {borderColor} font-semibold transition focus:ring-2 focus:ring-blue-500">
+                    Send
+                </button>
+            </form>
+        </div>
     </div>
-    <div class="mt-4 border {borderColor} rounded-lg h-auto p-3">
-        <b class="font-bold text-2xl">Projects: </b><br>
     </div>
-  
 </div>
 
 
