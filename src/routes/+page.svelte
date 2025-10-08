@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     let nightMode = true;
 
     const bgColors = ['bg-gray-300', 'bg-gray-800'];
@@ -22,6 +22,26 @@
         link.download = 'Boden Harris - Resume.pdf';
         link.click();
     }
+
+    async function handleSubmit(event: SubmitEvent) {
+  event.preventDefault();
+  const form = event.target as HTMLFormElement;
+  const data = new FormData(form);
+
+  const response = await fetch(form.action, {
+    method: form.method,
+    body: data,
+    headers: { 'Accept': 'application/json' }
+  });
+
+  if (response.ok) {
+    alert('✅ Thank you, your message has been sent!');
+    form.reset();
+  } else {
+    alert('❌ Something went wrong. Please try again.');
+  }
+}
+
 
 </script>
 
@@ -99,22 +119,33 @@
             </div>
 
             <!-- Email Form -->
-            <form action="mailto:blharris@umass.edu" method="post" enctype="text/plain" class="flex flex-col space-y-3">
-                <input 
-                    type="email" 
-                    placeholder="Your email address" 
-                    class="p-2 rounded-md border {borderColor} focus:ring-2 focus:ring-blue-500 {textColor} {bgColor}" 
-                    required>
-                <textarea 
-                    placeholder="Your message..." 
-                    class="p-2 rounded-md border {borderColor} focus:ring-2 focus:ring-blue-500 {textColor} {bgColor}" 
-                    rows="3" required></textarea>
-                <button 
-                    type="submit" 
-                    class="rounded-md py-2 {bgColor} {hoverColor} border {borderColor} font-semibold transition focus:ring-2 focus:ring-blue-500">
+            <form
+                on:submit={handleSubmit}
+                action="https://formspree.io/f/mldpwzlr"
+                method="POST"
+                class="flex flex-col space-y-3"
+                >
+                <input
+                    type="email"
+                    name="email"
+                    placeholder="Your email address"
+                    class="p-2 rounded-md border {borderColor} focus:ring-2 focus:ring-blue-500 {textColor} {bgColor}"
+                    required
+                />
+                <textarea
+                    name="message"
+                    placeholder="Your message..."
+                    class="p-2 rounded-md border {borderColor} focus:ring-2 focus:ring-blue-500 {textColor} {bgColor}"
+                    rows="3"
+                    required
+                ></textarea>
+                <button
+                    type="submit"
+                    class="rounded-md py-2 {bgColor} {hoverColor} border {borderColor} font-semibold transition focus:ring-2 focus:ring-blue-500"
+                >
                     Send
                 </button>
-            </form>
+                </form>
         </div>
     </div>
     </div>
