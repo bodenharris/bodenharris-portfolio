@@ -1,169 +1,210 @@
 <script lang="ts">
-    let nightMode = true;
+	import { onMount } from 'svelte';
 
-    const bgColors = ['bg-gray-300', 'bg-gray-800'];
-    const textColors = ['text-gray-800', 'text-white'];
-    const borderColors = ['border-gray-800', 'border-gray-500'];
-    const hoverColors = ['hover:bg-gray-200', 'hover:bg-gray-700'];
+	type Theme = 'light' | 'dark';
 
-    $: bgColor = nightMode ? bgColors[1] : bgColors[0];
-    $: textColor = nightMode ? textColors[1] : textColors[0];
-    $: borderColor = nightMode ? borderColors[1] : borderColors[0];
-    $: hoverColor = nightMode ? hoverColors[1] : hoverColors[0];
-    $: nightModeIcon = nightMode ? 'moonClipart.png' : 'sunClipart.png';
+	let theme: Theme = 'dark';
+	let formStatus = '';
+	let isSubmitting = false;
 
-    function toggleNightMode() {
-        nightMode = !nightMode;
-    }
+	const projects = [
+		{
+			name: 'YourSplit',
+			description: 'A full-stack workout platform where users create, save, browse, share, and favorite training routines.',
+			technologies: ['SvelteKit', 'TypeScript', 'Supabase', 'Tailwind CSS'],
+			href: 'https://yoursplit.com',
+			linkLabel: 'Visit live app',
+			featured: true
+		},
+		{
+			name: 'Chess Engine',
+			description: 'A playable C# chess engine with legal move generation, position evaluation, and minimax search with alpha-beta pruning.',
+			technologies: ['C#', 'Unity', 'Algorithms'],
+			href: 'https://github.com/bodenharris/Chess-Engine-Unity',
+			linkLabel: 'View source'
+		},
+		{
+			name: 'Assembly Interpreter',
+			description: 'An interpreter in C that parses assembly programs, maintains register state, and executes operations.',
+			technologies: ['C', 'Linux', 'Systems'],
+			href: 'https://github.com/bodenharris/Assembly-Interpreter',
+			linkLabel: 'View source'
+		},
+		{
+			name: 'Independent Games',
+			description: 'Puzzle games shaped through iterative level design and playtesting, including Delicate Logic.',
+			technologies: ['Unity', 'PuzzleScript', 'Game Design'],
+			href: 'https://dollamenu.itch.io/',
+			linkLabel: 'Play on itch.io'
+		},
+		{
+			name: 'Online Multiplayer Game',
+			description: 'A party game inspired by Jackbox, with real-time interactions between a host and connected players.',
+			technologies: ['JavaScript', 'Multiplayer', 'Web'],
+			href: 'https://github.com/bodenharris/Goonbox-game',
+			linkLabel: 'View source'
+		}
+	];
 
-    function downloadResume() {
-        const link = document.createElement('a');
-        link.href = 'resume.pdf';
-        link.download = 'resume.pdf';
-        link.click();
-    }
+	const skillGroups = [
+		{ label: 'Languages', items: ['Python', 'C', 'C#', 'Java', 'JavaScript', 'TypeScript', 'SQL', 'HTML/CSS'] },
+		{ label: 'Frameworks & tools', items: ['Svelte', 'SvelteKit', 'Tailwind CSS', 'Supabase', 'Unity', 'Docker', 'Git', 'Linux'] }
+	];
 
-    async function handleSubmit(event: SubmitEvent) {
-        event.preventDefault();
-        const form = event.target as HTMLFormElement;
-        const data = new FormData(form);
+	onMount(() => {
+		const storedTheme = localStorage.getItem('portfolio-theme') as Theme | null;
+		if (storedTheme === 'light' || storedTheme === 'dark') theme = storedTheme;
+		else if (window.matchMedia('(prefers-color-scheme: light)').matches) theme = 'light';
+	});
 
-        const response = await fetch(form.action, {
-            method: form.method,
-            body: data,
-            headers: { 'Accept': 'application/json' }
-        });
+	function toggleTheme() {
+		theme = theme === 'dark' ? 'light' : 'dark';
+		localStorage.setItem('portfolio-theme', theme);
+	}
 
-        if (response.ok) {
-            alert('✅ Thank you, your message has been sent!');
-            form.reset();
-        } else {
-            alert('❌ Something went wrong. Please try again.');
-        }
-    }
+	async function handleSubmit(event: SubmitEvent) {
+		event.preventDefault();
+		const form = event.currentTarget as HTMLFormElement;
+		isSubmitting = true;
+		formStatus = '';
+		try {
+			const response = await fetch(form.action, {
+				method: form.method,
+				body: new FormData(form),
+				headers: { Accept: 'application/json' }
+			});
+			if (!response.ok) throw new Error('Submission failed');
+			form.reset();
+			formStatus = 'Thanks — your message has been sent.';
+		} catch {
+			formStatus = 'The message could not be sent. Please email me directly instead.';
+		} finally {
+			isSubmitting = false;
+		}
+	}
 </script>
 
-<div class="min-h-screen {bgColor} p-8 {textColor}">
-    <h1 class="text-6xl font-extrabold">Boden Harris</h1>
-    <button 
-        class="absolute w-16 h-16 top-4 right-4 flex items-center justify-center rounded-full {bgColor} {hoverColor} focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-        aria-label="Toggle Night Mode"
-        on:click={toggleNightMode}>
-        <img src={nightModeIcon} alt="Moon Icon" class="w-[48px] h-[48px]" style="{nightMode ? 'filter: invert(1)' : ''}">
-    </button>
-    <hr class="border-t-2 {borderColor}">
-    <h2 class="text-lg ">blharris@umass.edu</h2>
+<svelte:head>
+	<title>Boden Harris | Computer Science Portfolio</title>
+	<meta name="description" content="Portfolio of Boden Harris, a Computer Science student at UMass Amherst building full-stack web applications, games, and systems projects." />
+	<meta name="theme-color" content={theme === 'dark' ? '#080b16' : '#f5f7fb'} />
+</svelte:head>
 
-    <!-- Responsive layout: stacks on mobile, side-by-side on large screens -->
-    <div class="flex flex-col lg:flex-row items-start lg:space-x-8">
-        <!-- Left Column -->
-        <div class="flex-1">
-            <p class="mt-4 border {borderColor} rounded-lg w-full lg:w-3/4 h-auto p-3">
-                <b class="font-bold text-2xl">About me: </b><br>
-                I am a sophomore at the UMass Amherst Commonwealth Honors College studying Computer Science.<br>
-                I am scheduled to graduate the spring of 2028.
-            </p>
+<div class:light={theme === 'light'} class="site-shell">
+	<a class="skip-link" href="#main-content">Skip to content</a>
 
-            <p class="mt-4 border {borderColor} rounded-lg w-full lg:w-3/4 h-auto p-3 flex items-center justify-between">
-                <span class="flex-1 text-center font-bold text-blue-500 text-lg">
-                    <a href="resume.pdf" target="_blank" class="hover:text-blue-600">
-                        View My Resume
-                    </a>
-                </span>
-                <button 
-                    class="w-12 h-12 flex items-center justify-center rounded-full {bgColor} {hoverColor} focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    aria-label="Download Resume"
-                    on:click={downloadResume}>
-                    <img src="downloadIcon.png" alt="Download Icon" class="w-[32px] h-[32px]" style="{nightMode ? 'filter: invert(1)' : ''}">
-                </button>
-            </p>
+	<header class="site-header">
+		<a class="brand" href="#top" aria-label="Boden Harris home">
+			<span class="brand-mark" aria-hidden="true">BH</span>
+			<span>Boden Harris</span>
+		</a>
+		<nav aria-label="Primary navigation">
+			<a href="#projects">Projects</a>
+			<a href="#skills">Skills</a>
+			<a href="#contact">Contact</a>
+			<a class="nav-resume" href="/resume.pdf" target="_blank" rel="noreferrer">Résumé</a>
+			<button class="theme-toggle" type="button" on:click={toggleTheme} aria-label={`Use ${theme === 'dark' ? 'light' : 'dark'} theme`}>
+				{theme === 'dark' ? 'Light' : 'Dark'}
+			</button>
+		</nav>
+	</header>
 
-            <div class="mt-4 border {borderColor} rounded-lg w-full lg:w-3/4 h-auto p-3">
-                <b class="font-bold text-2xl">Skills: </b><br>
-                <ul class="list-disc list-inside">
-                    <li>Java</li>
-                    <li>C</li>
-                    <li>Python</li>
-                    <li>Svelte</li>
-                    <li>HTML</li>
-                    <li>CSS</li>
-                    <li>JavaScript</li>
-                </ul>
-            </div>
+	<main id="main-content">
+		<section class="hero" id="top">
+			<div class="hero-copy">
+				<p class="eyebrow">Computer Science · UMass Amherst</p>
+				<h1>I build useful software from interface to implementation.</h1>
+				<p class="hero-intro">
+					I’m Boden Harris, a Computer Science student interested in full-stack development,
+					game systems, and the details that make software reliable and enjoyable to use.
+				</p>
+				<div class="hero-actions">
+					<a class="button primary" href="#projects">Explore my work</a>
+					<a class="button secondary" href="/resume.pdf" target="_blank" rel="noreferrer">View résumé</a>
+				</div>
+				<div class="hero-links" aria-label="Professional profiles">
+					<a href="https://github.com/bodenharris" target="_blank" rel="noreferrer">GitHub</a>
+					<a href="https://www.linkedin.com/in/boden-harris-a74897326/" target="_blank" rel="noreferrer">LinkedIn</a>
+					<a href="https://dollamenu.itch.io/" target="_blank" rel="noreferrer">itch.io</a>
+				</div>
+			</div>
 
-            <div class="mt-4 border {borderColor} rounded-lg w-full lg:w-3/4 h-auto p-3">
-                <b class="font-bold text-2xl">Projects:</b><br>
-                <ul class="list-disc pl-6 mt-2">
-                    <li>
-                        <a href="https://github.com/bodenharris/Chess-Engine-Unity" target="_blank" class="text-blue-600 hover:underline">
-                            Chess Engine
-                        </a> – A chess engine in C# capable of board evaluation, move generation, and move selection. 
-                    </li>
-                    <li>
-                        <a href="https://github.com/bodenharris/Assembly-Interpreter" target="_blank" class="text-blue-600 hover:underline">
-                            Assembly Interpreter
-                        </a> – A simulation of an assembly interpreter in C capable of reading external files and executing assembly instructions. 
-                    </li>
-                    <li>
-                        <a href="https://github.com/bodenharris/Goonbox-game" target="_blank" class="text-blue-600 hover:underline">
-                            Online Multiplayer Game
-                        </a> – A multiplayer game inspired by Jackbox, featuring real-time interactions between a host and connected players. 
-                    </li>
-                </ul>
-            </div>
-        </div>
+			<div class="hero-profile">
+				<div class="portrait-frame"><img src="/profile.jpg" alt="Boden Harris" /></div>
+				<dl class="profile-facts">
+					<div><dt>Graduation</dt><dd>May 2028</dd></div>
+					<div><dt>GPA</dt><dd>3.97 / 4.00</dd></div>
+					<div><dt>Focus</dt><dd>Software engineering</dd></div>
+				</dl>
+			</div>
+		</section>
 
-        <!-- Right Column -->
-        <div class="flex justify-end mt-8 lg:mt-4 flex-col items-center space-y-6">
-            <!-- Profile Picture -->
-            <img src="profile.jpg" alt="Profile" class="h-96 w-96 rounded-full ring-6 ring-gray-500">
+		<section class="section" id="projects">
+			<div class="section-heading">
+				<div><p class="eyebrow">Selected work</p><h2>Projects</h2></div>
+				<p>Products, systems, and games built to turn ideas into working experiences.</p>
+			</div>
+			<div class="project-grid">
+				{#each projects as project, index}
+					<article class:featured={project.featured} class="project-card">
+						<div class="project-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</div>
+						<div>
+							{#if project.featured}<p class="project-kicker">Featured project</p>{/if}
+							<h3>{project.name}</h3>
+							<p>{project.description}</p>
+							<ul class="tag-list" aria-label={`${project.name} technologies`}>
+								{#each project.technologies as technology}<li>{technology}</li>{/each}
+							</ul>
+						</div>
+						<a class="project-link" href={project.href} target="_blank" rel="noreferrer">
+							{project.linkLabel}<span aria-hidden="true"> ↗</span>
+						</a>
+					</article>
+				{/each}
+			</div>
+		</section>
 
-            <!-- Connect with Me Box -->
-            <div class="mt-6 border {borderColor} rounded-2xl p-6 w-96 text-center {bgColor} shadow-lg">
-                <h3 class="text-2xl font-bold mb-4">Connect with Me</h3>
-                <div class="flex justify-center space-x-6 mb-4">
-                    <a href="https://github.com/bodenharris" target="_blank" class="transition transform hover:scale-110">
-                        <img src="github.png" alt="GitHub" class="w-10 h-10" style="{nightMode ? 'filter: invert(1)' : ''}">
-                    </a>
-                    <a href="https://www.linkedin.com/in/boden-harris-a74897326/" target="_blank" class="transition transform hover:scale-110">
-                        <img src="linkedin.png" alt="LinkedIn" class="w-10 h-10" style="{nightMode ? 'filter: invert(1)' : ''}">
-                    </a>
-                    <a href="https://www.instagram.com/bodenharris523/" target="_blank" class="transition transform hover:scale-110">
-                        <img src="instagram.png" alt="Instagram" class="w-10 h-10" style="{nightMode ? 'filter: invert(1)' : ''}">
-                    </a>
-                    <a href="https://discord.com/users/1276287236106883177" target="_blank" class="transition transform hover:scale-110">
-                        <img src="discord.png" alt="Discord" class="w-10 h-10" style="{nightMode ? 'filter: invert(1)' : ''}">
-                    </a>
-                </div>
+		<section class="section" id="skills">
+			<div class="section-heading">
+				<div><p class="eyebrow">Technical toolkit</p><h2>Skills</h2></div>
+				<p>Technologies I have used across coursework and independent projects.</p>
+			</div>
+			<div class="skill-grid">
+				{#each skillGroups as group}
+					<div class="skill-group">
+						<h3>{group.label}</h3>
+						<ul>{#each group.items as item}<li>{item}</li>{/each}</ul>
+					</div>
+				{/each}
+			</div>
+		</section>
 
-                <form
-                    on:submit={handleSubmit}
-                    action="https://formspree.io/f/mldpwzlr"
-                    method="POST"
-                    class="flex flex-col space-y-3"
-                >
-                    <input
-                        type="email"
-                        name="email"
-                        placeholder="Your email address"
-                        class="p-2 rounded-md border {borderColor} focus:ring-2 focus:ring-blue-500 {textColor} {bgColor}"
-                        required
-                    />
-                    <textarea
-                        name="message"
-                        placeholder="Your message..."
-                        class="p-2 rounded-md border {borderColor} focus:ring-2 focus:ring-blue-500 {textColor} {bgColor}"
-                        rows="3"
-                        required
-                    ></textarea>
-                    <button
-                        type="submit"
-                        class="rounded-md py-2 {bgColor} {hoverColor} border {borderColor} font-semibold transition focus:ring-2 focus:ring-blue-500"
-                    >
-                        Send
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
+		<section class="section contact-section" id="contact">
+			<div class="contact-copy">
+				<p class="eyebrow">Get in touch</p>
+				<h2>Let’s talk about an opportunity or project.</h2>
+				<p>The fastest way to reach me is by email. You can also use the form and I’ll respond as soon as I can.</p>
+				<a class="email-link" href="mailto:blharris@umass.edu">blharris@umass.edu</a>
+			</div>
+			<form on:submit={handleSubmit} action="https://formspree.io/f/mldpwzlr" method="POST">
+				<label for="email">Your email</label>
+				<input id="email" type="email" name="email" autocomplete="email" required />
+				<label for="message">Message</label>
+				<textarea id="message" name="message" rows="5" required></textarea>
+				<button class="button primary" type="submit" disabled={isSubmitting}>
+					{isSubmitting ? 'Sending…' : 'Send message'}
+				</button>
+				{#if formStatus}<p class="form-status" role="status">{formStatus}</p>{/if}
+			</form>
+		</section>
+	</main>
+
+	<footer>
+		<p>© {new Date().getFullYear()} Boden Harris</p>
+		<div>
+			<a href="https://github.com/bodenharris" target="_blank" rel="noreferrer">GitHub</a>
+			<a href="https://www.linkedin.com/in/boden-harris-a74897326/" target="_blank" rel="noreferrer">LinkedIn</a>
+			<a href="https://dollamenu.itch.io/" target="_blank" rel="noreferrer">itch.io</a>
+		</div>
+	</footer>
 </div>
