@@ -1,7 +1,9 @@
 {
 	"name": "learrning-sveltekit",
 	"version": "0.0.1",
-	"type": "module",
+	"type": "module", "engines": {
+    "node": "22.x"
+  	},
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
