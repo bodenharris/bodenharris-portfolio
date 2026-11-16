@@ -1,155 +1,182 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { bayer } from './pixel';
+
+	// Everything is drawn on a low-resolution canvas and scaled up with
+	// nearest-neighbour sampling, so stars, meteors and nebulae are true pixels.
+	const PX = 3;
 
 	let canvas: HTMLCanvasElement;
 
-	type Star = {
-		x: number;
-		y: number;
-		r: number;
-		depth: number;
-		base: number;
-		speed: number;
-		phase: number;
-		hue: [number, number, number];
-		spark: boolean;
-	};
-
+	type Star = { x: number; y: number; depth: number; speed: number; phase: number; color: number; spark: boolean };
 	type Meteor = { x: number; y: number; vx: number; vy: number; life: number; max: number };
 
-	const tints: [number, number, number][] = [
-		[255, 255, 255],
-		[255, 255, 255],
-		[255, 255, 255],
-		[200, 215, 255],
-		[170, 200, 255],
-		[255, 236, 210],
-		[255, 214, 230]
-	];
+	const palettes = {
+		dark: {
+			stars: ['#f4f4f4', '#f4f4f4', '#f4f4f4', '#94b0c2', '#73eff7', '#ffcd75'],
+			dim: '#566c86',
+			nebula: [
+				{ x: 0.82, y: 0.12, rx: 0.42, ry: 0.32, c: ['#2c1d45', '#5d275d'] },
+				{ x: 0.08, y: 0.55, rx: 0.38, ry: 0.38, c: ['#18264a', '#29366f'] },
+				{ x: 0.6, y: 0.98, rx: 0.5, ry: 0.28, c: ['#16303c', '#257179'] }
+			],
+			meteor: ['#f4f4f4', '#73eff7', '#3b5dc9']
+		},
+		light: {
+			stars: ['#7d8fc4', '#7d8fc4', '#94a4d8', '#a8b6e0'],
+			dim: '#b9c6e6',
+			nebula: [
+				{ x: 0.82, y: 0.12, rx: 0.42, ry: 0.32, c: ['#ffe2a8', '#ffcd75'] },
+				{ x: 0.08, y: 0.55, rx: 0.38, ry: 0.38, c: ['#cfe0f5', '#b4cdec'] },
+				{ x: 0.6, y: 0.98, rx: 0.5, ry: 0.28, c: ['#ffd9cc', '#f7b8a4'] }
+			],
+			meteor: ['#ffffff', '#ffcd75', '#ef7d57']
+		}
+	};
 
 	onMount(() => {
 		const ctx = canvas.getContext('2d');
 		if (!ctx) return;
 
 		const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+		const nebula = document.createElement('canvas');
+		const nctx = nebula.getContext('2d')!;
 		let stars: Star[] = [];
 		let meteors: Meteor[] = [];
-		let width = 0;
-		let height = 0;
-		let dpr = 1;
+		let w = 0;
+		let h = 0;
 		let frame = 0;
 		let nextMeteor = performance.now() + 2500;
+		let mode: 'dark' | 'light' = 'dark';
+
+		const currentMode = () => (document.documentElement.dataset.theme === 'light' ? 'light' : 'dark');
+
+		function buildNebula() {
+			mode = currentMode();
+			nebula.width = w;
+			nebula.height = h;
+			const img = nctx.createImageData(w, h);
+			const blobs = palettes[mode].nebula.map((b) => ({
+				...b,
+				rgb: b.c.map((hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)))
+			}));
+			for (let y = 0; y < h; y++) {
+				for (let x = 0; x < w; x++) {
+					let best = 0;
+					let pick: number[] | null = null;
+					for (const b of blobs) {
+						const dx = (x / w - b.x) / b.rx;
+						const dy = (y / h - b.y) / b.ry;
+						const v = Math.exp(-(dx * dx + dy * dy) * 2.2);
+						// two dithered density levels per cloud
+						const t = bayer(x, y);
+						const level = v * 2.4 > 1 + t ? 1 : v * 2.4 > t ? 0 : -1;
+						if (level >= 0 && v > best) {
+							best = v;
+							pick = b.rgb[level];
+						}
+					}
+					if (pick) {
+						const i = (y * w + x) * 4;
+						img.data[i] = pick[0];
+						img.data[i + 1] = pick[1];
+						img.data[i + 2] = pick[2];
+						img.data[i + 3] = 255;
+					}
+				}
+			}
+			nctx.putImageData(img, 0, 0);
+		}
 
 		function build() {
-			dpr = Math.min(window.devicePixelRatio || 1, 2);
-			width = window.innerWidth;
-			height = window.innerHeight;
-			canvas.width = Math.round(width * dpr);
-			canvas.height = Math.round(height * dpr);
-			ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-			const count = Math.min(700, Math.round((width * height) / 2400));
-			stars = Array.from({ length: count }, () => {
-				const depth = Math.random();
-				const spark = Math.random() < 0.045;
-				return {
-					x: Math.random(),
-					y: Math.random(),
-					depth,
-					r: spark ? 1.1 + Math.random() * 0.9 : 0.35 + Math.pow(Math.random(), 2.4) * 1.25,
-					base: 0.35 + Math.random() * 0.65,
-					speed: 0.6 + Math.random() * 2.6,
-					phase: Math.random() * Math.PI * 2,
-					hue: tints[Math.floor(Math.random() * tints.length)],
-					spark
-				};
-			});
+			w = Math.ceil(window.innerWidth / PX);
+			h = Math.ceil(window.innerHeight / PX);
+			canvas.width = w;
+			canvas.height = h;
+			canvas.style.width = `${w * PX}px`;
+			canvas.style.height = `${h * PX}px`;
+			const count = Math.min(420, Math.round((w * h) / 260));
+			stars = Array.from({ length: count }, () => ({
+				x: Math.random(),
+				y: Math.random(),
+				depth: Math.random(),
+				speed: 0.5 + Math.random() * 2,
+				phase: Math.random() * Math.PI * 2,
+				color: Math.floor(Math.random() * 6),
+				spark: Math.random() < 0.06
+			}));
+			buildNebula();
 		}
 
 		function spawnMeteor() {
 			const fromLeft = Math.random() < 0.5;
-			const angle = (Math.PI / 180) * (18 + Math.random() * 22);
-			const speed = 9 + Math.random() * 7;
+			const speed = 2 + Math.random() * 1.5;
 			meteors.push({
-				x: fromLeft ? Math.random() * width * 0.5 : width * 0.5 + Math.random() * width * 0.5,
-				y: Math.random() * height * 0.45,
-				vx: Math.cos(angle) * speed * (fromLeft ? 1 : -1),
-				vy: Math.sin(angle) * speed,
+				x: fromLeft ? Math.random() * w * 0.5 : w * 0.5 + Math.random() * w * 0.5,
+				y: Math.random() * h * 0.4,
+				vx: speed * (fromLeft ? 1 : -1),
+				vy: speed * 0.5,
 				life: 0,
-				max: 55 + Math.random() * 35
+				max: 50 + Math.random() * 30
 			});
 		}
 
+		function px(x: number, y: number, c: string) {
+			ctx!.fillStyle = c;
+			ctx!.fillRect(Math.round(x), Math.round(y), 1, 1);
+		}
+
 		function draw(now: number) {
-			const light = document.documentElement.dataset.theme === 'light';
+			if (currentMode() !== mode) buildNebula();
+			const pal = palettes[mode];
 			const t = now / 1000;
-			const scroll = window.scrollY;
-			ctx!.clearRect(0, 0, width, height);
+			const scroll = window.scrollY / PX;
+			ctx!.clearRect(0, 0, w, h);
+			ctx!.drawImage(nebula, 0, 0);
 
 			for (const s of stars) {
-				// slow parallax drift with scroll, deeper stars move less
-				const offset = (scroll * (0.02 + s.depth * 0.08)) % height;
-				let y = s.y * height - offset;
-				if (y < 0) y += height;
-				const x = s.x * width;
-
-				// layered sines give an irregular, natural flicker
-				const flicker =
-					0.55 +
-					0.3 * Math.sin(t * s.speed + s.phase) +
-					0.15 * Math.sin(t * s.speed * 2.7 + s.phase * 1.7);
-				let alpha = s.base * Math.max(0.08, flicker);
-				if (light) alpha *= 0.55;
-
-				const [r, g, b] = light ? [72, 82, 168] : s.hue;
-				ctx!.fillStyle = `rgba(${r},${g},${b},${alpha})`;
-				ctx!.beginPath();
-				ctx!.arc(x, y, s.r, 0, Math.PI * 2);
-				ctx!.fill();
-
+				const offset = (scroll * (0.06 + s.depth * 0.25)) % h;
+				let y = Math.floor(s.y * h - offset);
+				if (y < 0) y += h;
+				const x = Math.floor(s.x * w);
+				// stepped twinkle: off / dim / bright
+				const f = Math.sin(t * s.speed + s.phase) + 0.4 * Math.sin(t * s.speed * 2.3 + s.phase);
+				const color = pal.stars[s.color % pal.stars.length];
 				if (s.spark) {
-					const len = s.r * (3.5 + 3 * Math.max(0, flicker));
-					ctx!.strokeStyle = `rgba(${r},${g},${b},${alpha * 0.55})`;
-					ctx!.lineWidth = 0.6;
-					ctx!.beginPath();
-					ctx!.moveTo(x - len, y);
-					ctx!.lineTo(x + len, y);
-					ctx!.moveTo(x, y - len);
-					ctx!.lineTo(x, y + len);
-					ctx!.stroke();
-
-					const glow = ctx!.createRadialGradient(x, y, 0, x, y, s.r * 5);
-					glow.addColorStop(0, `rgba(${r},${g},${b},${alpha * 0.35})`);
-					glow.addColorStop(1, `rgba(${r},${g},${b},0)`);
-					ctx!.fillStyle = glow;
-					ctx!.beginPath();
-					ctx!.arc(x, y, s.r * 5, 0, Math.PI * 2);
-					ctx!.fill();
+					px(x, y, color);
+					if (f > -0.2) {
+						ctx!.fillStyle = color;
+						ctx!.fillRect(x - 1, y, 3, 1);
+						ctx!.fillRect(x, y - 1, 1, 3);
+					}
+					if (f > 0.7) {
+						ctx!.fillStyle = pal.dim;
+						ctx!.fillRect(x - 2, y, 1, 1);
+						ctx!.fillRect(x + 2, y, 1, 1);
+						ctx!.fillRect(x, y - 2, 1, 1);
+						ctx!.fillRect(x, y + 2, 1, 1);
+					}
+				} else if (f > -0.6) {
+					px(x, y, f > 0.3 ? color : pal.dim);
 				}
 			}
 
-			if (!light && now > nextMeteor) {
+			if (mode === 'dark' && now > nextMeteor) {
 				spawnMeteor();
 				nextMeteor = now + 4000 + Math.random() * 7000;
 			}
-
-			meteors = meteors.filter((m) => m.life < m.max);
+			meteors = meteors.filter((m) => m.life < m.max && m.x > -20 && m.x < w + 20);
 			for (const m of meteors) {
 				m.life++;
 				m.x += m.vx;
 				m.y += m.vy;
-				const fade = Math.sin((m.life / m.max) * Math.PI);
-				const tail = 14;
-				const grad = ctx!.createLinearGradient(m.x, m.y, m.x - m.vx * tail, m.y - m.vy * tail);
-				grad.addColorStop(0, `rgba(255,255,255,${0.9 * fade})`);
-				grad.addColorStop(1, 'rgba(160,190,255,0)');
-				ctx!.strokeStyle = grad;
-				ctx!.lineWidth = 1.4;
-				ctx!.lineCap = 'round';
-				ctx!.beginPath();
-				ctx!.moveTo(m.x, m.y);
-				ctx!.lineTo(m.x - m.vx * tail, m.y - m.vy * tail);
-				ctx!.stroke();
+				// a stair-stepped trail that cools from white to blue
+				const len = 14;
+				for (let i = len; i >= 0; i--) {
+					const c = i < 2 ? pal.meteor[0] : i < 7 ? pal.meteor[1] : pal.meteor[2];
+					if (i > 9 && i % 2) continue;
+					px(m.x - (m.vx / Math.abs(m.vx)) * i, m.y - i * 0.5, c);
+				}
 			}
 
 			if (!reduced.matches) frame = requestAnimationFrame(draw);
@@ -168,8 +195,6 @@
 				restart();
 			}, 120);
 		}
-
-		// with reduced motion, repaint a still frame on scroll/theme change only
 		function onStatic() {
 			if (reduced.matches) restart();
 		}
@@ -194,7 +219,6 @@
 </script>
 
 <div class="sky" aria-hidden="true">
-	<div class="nebula"></div>
 	<canvas bind:this={canvas}></canvas>
 </div>
 
@@ -205,27 +229,12 @@
 		z-index: 0;
 		pointer-events: none;
 		background: var(--sky);
-		transition: background 600ms ease;
-	}
-	.nebula {
-		position: absolute;
-		inset: -10%;
-		background:
-			radial-gradient(ellipse 45% 35% at 82% 12%, var(--nebula-a), transparent 70%),
-			radial-gradient(ellipse 40% 40% at 8% 55%, var(--nebula-b), transparent 70%),
-			radial-gradient(ellipse 50% 30% at 60% 95%, var(--nebula-c), transparent 70%);
-		filter: blur(20px);
-		animation: drift 60s ease-in-out infinite alternate;
 	}
 	canvas {
 		position: absolute;
-		inset: 0;
-		width: 100%;
-		height: 100%;
-	}
-	@keyframes drift {
-		to {
-			transform: translate3d(-2%, 3%, 0) scale(1.06);
-		}
+		top: 0;
+		left: 0;
+		image-rendering: pixelated;
+		image-rendering: crisp-edges;
 	}
 </style>
