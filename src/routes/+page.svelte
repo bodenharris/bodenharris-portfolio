@@ -281,7 +281,6 @@
 					<PixelPlanet class="stage-moon" r={7} hue={190} />
 					<div class="portrait-frame">
 						<PixelPortrait src="/profile.jpg" alt="Boden Harris" />
-						<span class="portrait-tag" aria-hidden="true">P1</span>
 					</div>
 				</div>
 				<dl class="profile-facts">

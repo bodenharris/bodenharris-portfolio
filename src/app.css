@@ -380,18 +380,6 @@ h2 {
 }
 :root:not([data-theme='light']) .portrait-frame { --bc: #f4f4f4; }
 @keyframes float { 50% { transform: translateY(calc(var(--p) * -1)); } }
-.portrait-tag {
-	position: absolute;
-	top: calc(var(--p) * -3);
-	left: calc(var(--p) * 3);
-	z-index: 2;
-	padding: .35rem .5rem;
-	background: var(--accent);
-	color: var(--accent-ink);
-	font-family: var(--font-display);
-	font-size: .6rem;
-	box-shadow: 0 0 0 2px var(--outline-strong);
-}
 .stage-moon {
 	position: absolute;
 	top: 0;
