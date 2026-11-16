@@ -46,7 +46,7 @@
 		<h1 class="sr-only">Boden Harris</h1>
 
 		<!-- an RPG text box -->
-		<div class="pixel-box relative mb-10 max-w-2xl animate-rise px-5 pt-5 pb-7 sm:px-7 sm:pt-6 sm:pb-8"
+		<div class="pixel-box relative mb-10 bg-card max-w-2xl animate-rise px-5 pt-5 pb-7 sm:px-7 sm:pt-6 sm:pb-8"
 			style:animation-delay="80ms">
 			<p class="text-[clamp(1.2rem,1.7vw,1.4rem)] leading-relaxed">
 				I’m Boden Harris, a Computer Science student interested in full-stack development, game systems, and
@@ -89,7 +89,7 @@
 			</div>
 		</div>
 
-		<dl class="pixel-box relative z-2 mt-6 grid grid-cols-3">
+		<dl class="pixel-box relative bg-card z-2 mt-6 grid grid-cols-3">
 			{#each facts as { label, value }, i (label)}
 				<div class={['px-2.5 py-3 sm:px-3.5', i > 0 && 'shadow-[inset_4px_0_0_0_var(--color-line)]']}>
 					<dt class="label-mono mb-1.5 text-[1.1rem]">{label}</dt>
@@ -122,7 +122,7 @@
 	{#each experience as group (group.label)}
 		<Card.Root {@attach reveal()}>
 			<Card.Header>
-				<h3 class="label-mono mb-2">{group.label}</h3>
+				<h3 class="label-mono text-label mb-2">{group.label}</h3>
 			</Card.Header>
 			<Card.Content>
 				<ol class="flex flex-col gap-8">
@@ -174,7 +174,7 @@
 			{@render meta(education.meta)}
 		</Card.Header>
 		<Card.Content>
-			<p class="label-mono mb-4">Relevant coursework</p>
+			<p class="label-mono text-label mb-4">Relevant coursework</p>
 			<ul class="flex flex-wrap gap-2" aria-label="Relevant coursework">
 				{#each education.coursework as course (course)}
 					<li><Badge>{course}</Badge></li>
@@ -187,7 +187,7 @@
 		{#each skills as group (group.label)}
 			<Card.Root {@attach reveal()}>
 				<Card.Header>
-					<h3 class="label-mono mb-1">{group.label}</h3>
+					<h3 class="label-mono text-label mb-1">{group.label}</h3>
 				</Card.Header>
 				<Card.Content>
 					<ul class="flex flex-wrap gap-3">

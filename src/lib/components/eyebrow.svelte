@@ -7,7 +7,7 @@
 </script>
 
 <!-- A small twinkling-star label above headings. -->
-<p class={['label-mono mb-4 flex items-center gap-2.5 tracking-[0.06em]', className]}>
+<p class={['label-mono text-label mb-4 flex items-center gap-2.5', className]}>
 	<Glyph name="star" class="size-2.5 flex-none animate-twinkle" />
 	{@render children()}
 </p>

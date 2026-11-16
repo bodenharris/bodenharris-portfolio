@@ -156,6 +156,8 @@
 }
 
 @theme {
+	--text-label: 1.3rem;
+
 	/* Every animation moves in whole frames, like a sprite. */
 	--animate-blink: blink 0.8s steps(1) infinite;
 	--animate-twinkle: twinkle 2.4s steps(2) infinite;
@@ -205,10 +207,10 @@
 
 /*
  * A panel with a notched 4px outline and a hard drop shadow, drawn with box-shadows
- * so the corners stay stepped like hand-placed pixels. Set --bc / --drop-h to vary it.
+ * so the corners stay stepped like hand-placed pixels. Set --bc / --drop-h to vary it,
+ * and pair it with a background such as bg-card.
  */
 @utility pixel-box {
-	background-color: var(--color-card);
 	box-shadow:
 		0 -4px 0 0 var(--bc, var(--color-border)),
 		0 4px 0 0 var(--bc, var(--color-border)),
@@ -235,10 +237,9 @@
 	text-shadow: 4px 4px 0 var(--color-drop);
 }
 
-/* Small uppercase VT323 labels used across the site. */
+/* Small uppercase VT323 labels used across the site; pair with a size such as text-label. */
 @utility label-mono {
 	font-family: var(--font-mono);
-	font-size: 1.3rem;
 	line-height: 1;
 	letter-spacing: 0.05em;
 	text-transform: uppercase;
