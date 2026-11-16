@@ -7,44 +7,131 @@
 	let formStatus = '';
 	let isSubmitting = false;
 
-	const projects = [
+	type Project = {
+		name: string;
+		dates?: string;
+		description: string;
+		technologies: string[];
+		href?: string;
+		linkLabel?: string;
+		featured?: boolean;
+	};
+
+	const projects: Project[] = [
 		{
 			name: 'YourSplit',
-			description: 'A full-stack workout platform where users create, save, browse, share, and favorite training routines.',
-			technologies: ['SvelteKit', 'TypeScript', 'Supabase', 'Tailwind CSS'],
+			dates: 'Apr 2026 – Present',
+			description:
+				'A workout-planning website where users create, save, browse, share, and favorite training routines. Built with a three-person team; I developed the SvelteKit backend with Supabase authentication and PostgreSQL to manage user accounts and stored routines.',
+			technologies: ['SvelteKit', 'TypeScript', 'Supabase', 'PostgreSQL', 'Tailwind CSS'],
 			href: 'https://yoursplit.com',
 			linkLabel: 'Visit live app',
 			featured: true
 		},
 		{
+			name: 'The Wolf',
+			dates: 'Nov 2026',
+			description:
+				'A daily market-guessing game: one famous stock chart, hidden, and five up-or-down calls before the reveal. Built with a three-person team; I led the arcade pixel-art redesign, the animated chart scenery, end-of-game ranks and a percentile histogram, sound effects, and the how-to-play carousel.',
+			technologies: ['SvelteKit', 'TypeScript', 'PostgreSQL', 'TimescaleDB', 'Tailwind CSS'],
+			href: 'https://thewolfof.nyc',
+			linkLabel: 'Play the game'
+		},
+		{
+			name: 'PlaylistGenerator',
+			dates: 'Oct 2025',
+			description:
+				'A Python tool that turns Last.fm listening history into Spotify playlists: it ranks tracks by play count, matches songs through Spotify search, and creates public playlists with OAuth.',
+			technologies: ['Python', 'Requests', 'Spotipy', 'OAuth']
+		},
+		{
 			name: 'Chess Engine',
-			description: 'A playable C# chess engine with legal move generation, position evaluation, and minimax search with alpha-beta pruning.',
+			dates: 'Jul 2025',
+			description:
+				'A playable C# chess engine with legal move generation, position evaluation, and minimax search with alpha-beta pruning, integrated with an interactive Unity interface.',
 			technologies: ['C#', 'Unity', 'Algorithms'],
 			href: 'https://github.com/bodenharris/Chess-Engine-Unity',
 			linkLabel: 'View source'
 		},
 		{
 			name: 'Assembly Interpreter',
-			description: 'An interpreter in C that parses assembly programs, maintains register state, and executes operations.',
+			dates: 'Mar 2025',
+			description:
+				'An interpreter in C that reads external assembly programs, parses instructions, maintains register state, and executes operations, tested on Linux to emulate low-level CPU state changes.',
 			technologies: ['C', 'Linux', 'Systems'],
 			href: 'https://github.com/bodenharris/Assembly-Interpreter',
 			linkLabel: 'View source'
 		},
 		{
 			name: 'Independent Games',
-			description: 'Puzzle games shaped through iterative level design and playtesting, including Delicate Logic.',
+			dates: 'Nov 2024 – Present',
+			description:
+				'Puzzle games designed and shipped through iterative level design, gameplay scripting, and playtesting. Delicate Logic was selected for the 2025 Confounding Calendar puzzle-game contest.',
 			technologies: ['Unity', 'PuzzleScript', 'Game Design'],
 			href: 'https://dollamenu.itch.io/',
 			linkLabel: 'Play on itch.io'
 		},
 		{
-			name: 'Online Multiplayer Game',
-			description: 'A party game inspired by Jackbox, with real-time interactions between a host and connected players.',
-			technologies: ['JavaScript', 'Multiplayer', 'Web'],
-			href: 'https://github.com/bodenharris/Goonbox-game',
+			name: 'Portfolio Website',
+			dates: 'Dec 2024 – Present',
+			description:
+				'This site: a responsive portfolio presenting my projects, experience, and skills, with source managed in Git and continuous deployment through Vercel.',
+			technologies: ['SvelteKit', 'Tailwind CSS', 'Vercel'],
+			href: 'https://github.com/bodenharris/bodenharris-portfolio',
 			linkLabel: 'View source'
 		}
 	];
+
+	type Role = { org: string; title: string; location?: string; dates?: string; points: string[] };
+
+	const experienceGroups: { label: string; roles: Role[] }[] = [
+		{
+			label: 'Work experience',
+			roles: [
+				{
+					org: 'Colorworks Construction',
+					title: 'Construction Worker / Assistant Contractor',
+					location: 'Belmont, MA',
+					dates: 'Summers 2024 – 2026',
+					points: [
+						'Advanced to assistant contractor in Summer 2026, supporting residential improvement project planning and execution, managing shift schedules, and communicating deadlines to clients.',
+						'Worked with a small construction team on home repairs, deck construction, power washing, and painting projects.'
+					]
+				},
+				{
+					org: 'Trinktisch',
+					title: 'Line Cook / Sous Chef',
+					location: 'Belmont, MA',
+					dates: 'Dec 2022 – Jan 2024',
+					points: [
+						'Trained and onboarded new employees on kitchen procedures, food preparation standards, and line operations.',
+						'Collaborated on a four-person line team to coordinate food preparation and keep service efficient in a fast-paced kitchen.'
+					]
+				}
+			]
+		},
+		{
+			label: 'Leadership & activities',
+			roles: [
+				{
+					org: 'UMass Game Dev Club',
+					title: 'Development Specialist',
+					dates: 'Sep 2026 – Present',
+					points: [
+						'Support members developing games across multiple engines, helping troubleshoot technical issues and identify implementation approaches.',
+						'Curate and share club member projects on GitHub and itch.io to showcase student work and grow the club’s project portfolio.'
+					]
+				},
+				{
+					org: 'UMass Men’s Rugby',
+					title: 'Member',
+					points: ['Compete with the university’s club rugby program in the D1-AA league.']
+				}
+			]
+		}
+	];
+
+	const coursework = ['Data Structures', 'C Programming', 'Web Programming', 'Machine Learning', 'Data Management'];
 
 	const skillGroups = [
 		{ label: 'Languages', items: ['Python', 'C', 'C#', 'Java', 'JavaScript', 'TypeScript', 'SQL', 'HTML/CSS'] },
@@ -124,6 +211,7 @@
 		</a>
 		<nav aria-label="Primary navigation">
 			<a href="#projects">Projects</a>
+			<a href="#experience">Experience</a>
 			<a href="#skills">Skills</a>
 			<a href="#contact">Contact</a>
 			<a class="nav-resume" href="/resume.pdf" target="_blank" rel="noreferrer">Résumé</a>
@@ -179,25 +267,77 @@
 					<article class:featured={project.featured} class="project-card" data-reveal style={`--delay: ${(index % 2) * 70}ms`}>
 						<div class="project-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</div>
 						<div>
-							{#if project.featured}<p class="project-kicker">Featured project</p>{/if}
+							{#if project.featured || project.dates}
+								<p class="project-kicker">{[project.featured && 'Featured project', project.dates].filter(Boolean).join(' · ')}</p>
+							{/if}
 							<h3>{project.name}</h3>
 							<p>{project.description}</p>
 							<ul class="tag-list" aria-label={`${project.name} technologies`}>
 								{#each project.technologies as technology}<li>{technology}</li>{/each}
 							</ul>
 						</div>
-						<a class="project-link" href={project.href} target="_blank" rel="noreferrer">
-							{project.linkLabel}<span aria-hidden="true"> ↗</span>
-						</a>
+						{#if project.href}
+							<a class="project-link" href={project.href} target="_blank" rel="noreferrer">
+								{project.linkLabel}<span aria-hidden="true"> ↗</span>
+							</a>
+						{/if}
 					</article>
+				{/each}
+			</div>
+		</section>
+
+		<section class="section" id="experience">
+			<div class="section-heading" data-reveal>
+				<div><p class="eyebrow">Beyond the code</p><h2>Experience</h2></div>
+				<p>Work, leadership, and team experience that shape how I collaborate and communicate.</p>
+			</div>
+			<div class="experience-grid">
+				{#each experienceGroups as group}
+					<div class="experience-group" data-reveal>
+						<h3 class="group-label">{group.label}</h3>
+						<ol class="role-list">
+							{#each group.roles as role}
+								<li class="role">
+									<div class="role-head">
+										<div>
+											<h4>{role.org}</h4>
+											<p class="role-title">{role.title}</p>
+										</div>
+										{#if role.dates || role.location}
+											<p class="role-meta">
+												{#if role.dates}<span>{role.dates}</span>{/if}
+												{#if role.location}<span>{role.location}</span>{/if}
+											</p>
+										{/if}
+									</div>
+									<ul class="role-points">
+										{#each role.points as point}<li>{point}</li>{/each}
+									</ul>
+								</li>
+							{/each}
+						</ol>
+					</div>
 				{/each}
 			</div>
 		</section>
 
 		<section class="section" id="skills">
 			<div class="section-heading" data-reveal>
-				<div><p class="eyebrow">Technical toolkit</p><h2>Skills</h2></div>
-				<p>Technologies I have used across coursework and independent projects.</p>
+				<div><p class="eyebrow">Education & toolkit</p><h2>Skills</h2></div>
+				<p>Technologies and coursework from my studies and independent projects.</p>
+			</div>
+			<div class="education-card" data-reveal>
+				<div class="education-head">
+					<div>
+						<h3>University of Massachusetts Amherst</h3>
+						<p>B.S. in Computer Science · Commonwealth Honors College</p>
+					</div>
+					<p class="role-meta"><span>Expected May 2028</span><span>GPA 3.97 / 4.00</span></p>
+				</div>
+				<p class="group-label">Relevant coursework</p>
+				<ul class="tag-list" aria-label="Relevant coursework">
+					{#each coursework as course}<li>{course}</li>{/each}
+				</ul>
 			</div>
 			<div class="skill-grid">
 				{#each skillGroups as group}
