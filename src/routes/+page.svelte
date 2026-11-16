@@ -250,7 +250,7 @@
 		<section class="hero" id="top">
 			<div class="hero-copy">
 				<p class="eyebrow">Computer Science · UMass Amherst</p>
-				<h1>I build useful software from <span class="accent-text">interface to implementation.</span></h1>
+				<h1 class="visually-hidden">Boden Harris</h1>
 				<p class="hero-intro">
 					I’m Boden Harris, a Computer Science student interested in full-stack development,
 					game systems, and the details that make software reliable and enjoyable to use.
