@@ -9,7 +9,7 @@
 	import Glyph from '#lib/components/glyph.svelte';
 	import PageSection from '#lib/components/page-section.svelte';
 	import PixelPlanet from '#lib/components/pixel-planet.svelte';
-	import PixelPortrait from '#lib/components/pixel-portrait.svelte';
+	import Portrait from '#lib/components/portrait.svelte';
 	import ProjectCard from '#lib/components/project-card.svelte';
 	import profilePhoto from '#lib/assets/profile.jpg?enhanced';
 
@@ -76,7 +76,7 @@
 		</ul>
 	</div>
 
-	<!-- the portrait: a pixelated character card floating in space -->
+	<!-- the portrait: the real photo (never pixelated) in a floating pixel frame -->
 	<div class="relative mx-auto w-full max-w-[min(100%-2.5rem,20rem)] animate-rise sm:max-w-88 md:max-w-100"
 		style:animation-delay="200ms">
 		<div class="relative aspect-square">
@@ -85,7 +85,7 @@
 			{/each}
 			<PixelPlanet r={7} hue={190} class="absolute top-0 right-0 w-[18%] animate-[float_6s_steps(2)_infinite_reverse]" />
 			<div class="pixel-box absolute inset-[12%] animate-float bg-muted p-1 [--bc:var(--color-edge-bright)]">
-				<PixelPortrait src={profilePhoto} alt="Boden Harris" />
+				<Portrait src={profilePhoto} alt="Boden Harris" />
 			</div>
 		</div>
 
