@@ -249,7 +249,6 @@
 	<main id="main-content">
 		<section class="hero" id="top">
 			<div class="hero-copy">
-				<p class="status-pill"><span class="status-dot" aria-hidden="true"></span>Open to software engineering internships</p>
 				<p class="eyebrow">Computer Science · UMass Amherst</p>
 				<h1>I build useful software from <span class="accent-text">interface to implementation.</span></h1>
 				<p class="hero-intro">
@@ -274,7 +273,6 @@
 					<div class="portrait-frame"><img src="/profile.jpg" alt="Boden Harris" /></div>
 					<div class="hero-moon">
 						<CelestialToggle {theme} size="lg" ontoggle={toggleTheme} />
-						<span class="moon-hint" aria-hidden="true">{theme === 'dark' ? 'click the moon' : 'click the sun'}</span>
 					</div>
 				</div>
 				<dl class="profile-facts">
