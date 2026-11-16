@@ -19,6 +19,7 @@ UMass Amherst seeking software engineering internship opportunities.
 ## Featured Projects
 
 - YourSplit — Workout-planning website (SvelteKit, Supabase, PostgreSQL)
+- The Wolf — Daily market-guessing game (SvelteKit, TimescaleDB)
 - PlaylistGenerator — Last.fm history to Spotify playlists (Python, Spotipy)
 - Unity Chess Engine
 - Assembly Interpreter

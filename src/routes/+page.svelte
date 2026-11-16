@@ -29,6 +29,15 @@
 			featured: true
 		},
 		{
+			name: 'The Wolf',
+			dates: 'Nov 2026',
+			description:
+				'A daily market-guessing game: one famous stock chart, hidden, and five up-or-down calls before the reveal. Built with a three-person team; I led the arcade pixel-art redesign, the animated chart scenery, end-of-game ranks and a percentile histogram, sound effects, and the how-to-play carousel.',
+			technologies: ['SvelteKit', 'TypeScript', 'PostgreSQL', 'TimescaleDB', 'Tailwind CSS'],
+			href: 'https://thewolfof.nyc',
+			linkLabel: 'Play the game'
+		},
+		{
 			name: 'PlaylistGenerator',
 			dates: 'Oct 2025',
 			description:
