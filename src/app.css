@@ -362,7 +362,7 @@ h2 {
 	box-shadow: 0 0 0 .2rem var(--accent);
 }
 
-/* portrait: a pixelated character card floating in space */
+/* portrait: the real photo (never pixelated) in a floating pixel frame */
 .hero-profile { position: relative; width: 100%; max-width: 25rem; justify-self: center; }
 
 .portrait-stage {

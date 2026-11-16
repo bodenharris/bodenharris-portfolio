@@ -3,7 +3,7 @@
 	import Starfield from '$lib/Starfield.svelte';
 	import CelestialToggle from '$lib/CelestialToggle.svelte';
 	import PixelPlanet from '$lib/PixelPlanet.svelte';
-	import PixelPortrait from '$lib/PixelPortrait.svelte';
+	import Portrait from '$lib/Portrait.svelte';
 	import PixelHorizon from '$lib/PixelHorizon.svelte';
 
 	type Theme = 'light' | 'dark';
@@ -280,7 +280,7 @@
 					<span class="sparkle s4" aria-hidden="true"></span>
 					<PixelPlanet class="stage-moon" r={7} hue={190} />
 					<div class="portrait-frame">
-						<PixelPortrait src="/profile.jpg" alt="Boden Harris" />
+						<Portrait src="/profile.jpg" alt="Boden Harris" />
 					</div>
 				</div>
 				<dl class="profile-facts">
