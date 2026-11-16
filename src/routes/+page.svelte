@@ -70,13 +70,6 @@
 			technologies: ['SvelteKit', 'Tailwind CSS', 'Vercel'],
 			href: 'https://github.com/bodenharris/bodenharris-portfolio',
 			linkLabel: 'View source'
-		},
-		{
-			name: 'Online Multiplayer Game',
-			description: 'A party game inspired by Jackbox, with real-time interactions between a host and connected players.',
-			technologies: ['JavaScript', 'Multiplayer', 'Web'],
-			href: 'https://github.com/bodenharris/Goonbox-game',
-			linkLabel: 'View source'
 		}
 	];
 

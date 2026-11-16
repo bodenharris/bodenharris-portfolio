@@ -23,7 +23,6 @@ UMass Amherst seeking software engineering internship opportunities.
 - Unity Chess Engine
 - Assembly Interpreter
 - Independent Game Development
-- Online Multiplayer Game
 
 ## Built With
 
