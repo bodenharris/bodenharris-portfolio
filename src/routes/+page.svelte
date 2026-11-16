@@ -4,6 +4,7 @@
 	import { Badge } from '#lib/components/ui/badge/index.js';
 	import { Button } from '#lib/components/ui/button/index.js';
 	import * as Card from '#lib/components/ui/card/index.js';
+	import CowAbduction from '#lib/components/cow-abduction.svelte';
 	import ContactForm from '#lib/components/contact-form.svelte';
 	import Eyebrow from '#lib/components/eyebrow.svelte';
 	import Glyph from '#lib/components/glyph.svelte';
@@ -86,6 +87,7 @@
 			<PixelPlanet r={7} hue={190} class="absolute top-0 right-0 w-[18%] animate-[float_6s_steps(2)_infinite_reverse]" />
 			<div class="pixel-box absolute inset-[12%] animate-float bg-muted p-1 [--bc:var(--color-edge-bright)]">
 				<Portrait src={profilePhoto} alt="Boden Harris" />
+				<CowAbduction />
 			</div>
 		</div>
 
