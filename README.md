@@ -11,16 +11,19 @@ UMass Amherst seeking software engineering internship opportunities.
 
 - Responsive light and dark themes
 - Featured software and game-development projects
+- Work experience, leadership, and education
 - Downloadable résumé
 - Contact form
 - Accessible, mobile-friendly interface
 
 ## Featured Projects
 
-- YourSplit — Gym planning and workout-tracking application
+- YourSplit — Workout-planning website (SvelteKit, Supabase, PostgreSQL)
+- PlaylistGenerator — Last.fm history to Spotify playlists (Python, Spotipy)
 - Unity Chess Engine
 - Assembly Interpreter
 - Independent Game Development
+- Online Multiplayer Game
 
 ## Built With
 
