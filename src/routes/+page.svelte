@@ -2,6 +2,9 @@
 	import { onMount, flushSync } from 'svelte';
 	import Starfield from '$lib/Starfield.svelte';
 	import CelestialToggle from '$lib/CelestialToggle.svelte';
+	import PixelPlanet from '$lib/PixelPlanet.svelte';
+	import PixelPortrait from '$lib/PixelPortrait.svelte';
+	import PixelHorizon from '$lib/PixelHorizon.svelte';
 
 	type Theme = 'light' | 'dark';
 
@@ -191,7 +194,7 @@
 			.then(() => {
 				document.documentElement.animate(
 					{ clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
-					{ duration: 800, easing: 'cubic-bezier(.65,0,.35,1)', pseudoElement: '::view-transition-new(root)' }
+					{ duration: 720, easing: 'steps(9, end)', pseudoElement: '::view-transition-new(root)' }
 				);
 			})
 			.catch(() => {});
@@ -222,7 +225,7 @@
 <svelte:head>
 	<title>Boden Harris | Computer Science Portfolio</title>
 	<meta name="description" content="Portfolio of Boden Harris, a Computer Science student at UMass Amherst building full-stack web applications, games, and systems projects." />
-	<meta name="theme-color" content={theme === 'dark' ? '#04050d' : '#e9ecfb'} />
+	<meta name="theme-color" content={theme === 'dark' ? '#11132a' : '#dcebf7'} />
 </svelte:head>
 
 <div class="site-shell">
@@ -232,7 +235,7 @@
 	<header class="site-header">
 		<div class="header-inner">
 		<a class="brand" href="#top" aria-label="Boden Harris home">
-			<span class="brand-mark" aria-hidden="true"><span>BH</span></span>
+			<PixelPlanet class="brand-mark" r={5} hue={255} ring />
 			<span>Boden Harris</span>
 		</a>
 		<nav aria-label="Primary navigation">
@@ -240,7 +243,7 @@
 			<a href="#experience">Experience</a>
 			<a href="#skills">Skills</a>
 			<a href="#contact">Contact</a>
-			<a class="nav-resume" href="/resume.pdf" target="_blank" rel="noreferrer">Résumé</a>
+			<a class="nav-resume" href="/resume.pdf" target="_blank" rel="noreferrer">Resume</a>
 			<CelestialToggle {theme} ontoggle={toggleTheme} />
 		</nav>
 		</div>
@@ -251,13 +254,16 @@
 			<div class="hero-copy">
 				<p class="eyebrow">Computer Science · UMass Amherst</p>
 				<h1 class="visually-hidden">Boden Harris</h1>
-				<p class="hero-intro">
-					I’m Boden Harris, a Computer Science student interested in full-stack development,
-					game systems, and the details that make software reliable and enjoyable to use.
-				</p>
+				<div class="dialog">
+					<p class="hero-intro">
+						I’m Boden Harris, a Computer Science student interested in full-stack development,
+						game systems, and the details that make software reliable and enjoyable to use.
+					</p>
+					<span class="dialog-caret" aria-hidden="true"></span>
+				</div>
 				<div class="hero-actions">
 					<a class="button primary" href="#projects">Explore my work</a>
-					<a class="button secondary" href="/resume.pdf" target="_blank" rel="noreferrer">View résumé</a>
+					<a class="button secondary" href="/resume.pdf" target="_blank" rel="noreferrer">View resume</a>
 				</div>
 				<div class="hero-links" aria-label="Professional profiles">
 					<a href="https://github.com/bodenharris" target="_blank" rel="noreferrer">GitHub</a>
@@ -267,10 +273,15 @@
 			</div>
 
 			<div class="hero-profile">
-				<div class="orbit-system">
-					<span class="orbit orbit-outer" aria-hidden="true"><span class="satellite"></span></span>
-					<span class="orbit orbit-inner" aria-hidden="true"><span class="satellite small"></span></span>
-					<div class="portrait-frame"><img src="/profile.jpg" alt="Boden Harris" /></div>
+				<div class="portrait-stage">
+					<span class="sparkle s1" aria-hidden="true"></span>
+					<span class="sparkle s2" aria-hidden="true"></span>
+					<span class="sparkle s3" aria-hidden="true"></span>
+					<span class="sparkle s4" aria-hidden="true"></span>
+					<PixelPlanet class="stage-moon" r={7} hue={190} />
+					<div class="portrait-frame">
+						<PixelPortrait src="/profile.jpg" alt="Boden Harris" />
+					</div>
 				</div>
 				<dl class="profile-facts">
 					<div><dt>Graduation</dt><dd>May 2028</dd></div>
@@ -289,7 +300,7 @@
 				{#each projects as project, index}
 					<article class:featured={project.featured} class="project-card" data-reveal style={`--delay: ${(index % 2) * 70}ms`}>
 						<div class="project-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</div>
-						<span class="planet" aria-hidden="true" style={`--hue: ${(index * 47 + 220) % 360}`}></span>
+						<PixelPlanet class="planet" r={project.featured ? 14 : 6} hue={(index * 47 + 220) % 360} ring={project.featured} />
 						<div>
 							{#if project.featured || project.dates}
 								<p class="project-kicker">{[project.featured && 'Featured project', project.dates].filter(Boolean).join(' · ')}</p>
@@ -394,6 +405,7 @@
 	</main>
 
 	<div class="horizon">
+		<PixelHorizon />
 		<footer>
 			<p>© {new Date().getFullYear()} Boden Harris</p>
 			<div>
