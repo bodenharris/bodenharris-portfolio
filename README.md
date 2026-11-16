@@ -9,7 +9,7 @@ UMass Amherst seeking software engineering internship opportunities.
 
 ## Features
 
-- Responsive light and dark themes
+- Space theme with a twinkling starfield; click the moon to turn it into the sun (light theme)
 - Featured software and game-development projects
 - Work experience, leadership, and education
 - Downloadable résumé

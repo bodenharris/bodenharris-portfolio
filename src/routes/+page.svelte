@@ -1,11 +1,13 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, flushSync } from 'svelte';
+	import Starfield from '$lib/Starfield.svelte';
+	import CelestialToggle from '$lib/CelestialToggle.svelte';
 
 	type Theme = 'light' | 'dark';
 
-	let theme: Theme = 'dark';
-	let formStatus = '';
-	let isSubmitting = false;
+	let theme = $state<Theme>('dark');
+	let formStatus = $state('');
+	let isSubmitting = $state(false);
 
 	type Project = {
 		name: string;
@@ -162,14 +164,37 @@
 		return () => observer.disconnect();
 	});
 
-	function toggleTheme() {
-		theme = theme === 'dark' ? 'light' : 'dark';
-		document.documentElement.dataset.theme = theme;
+	function applyTheme(next: Theme) {
+		theme = next;
+		document.documentElement.dataset.theme = next;
 		try {
-			localStorage.setItem('portfolio-theme', theme);
+			localStorage.setItem('portfolio-theme', next);
 		} catch {
 			/* storage unavailable */
 		}
+	}
+
+	// The new theme spreads outward from the moon/sun that was clicked.
+	function toggleTheme(event: MouseEvent) {
+		const next: Theme = theme === 'dark' ? 'light' : 'dark';
+		const doc = document as Document & { startViewTransition?: (cb: () => void) => { ready: Promise<void> } };
+		if (!doc.startViewTransition || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+			applyTheme(next);
+			return;
+		}
+		const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+		const x = rect.left + rect.width / 2;
+		const y = rect.top + rect.height / 2;
+		const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+		const transition = doc.startViewTransition(() => flushSync(() => applyTheme(next)));
+		transition.ready
+			.then(() => {
+				document.documentElement.animate(
+					{ clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+					{ duration: 800, easing: 'cubic-bezier(.65,0,.35,1)', pseudoElement: '::view-transition-new(root)' }
+				);
+			})
+			.catch(() => {});
 	}
 
 	async function handleSubmit(event: SubmitEvent) {
@@ -197,16 +222,17 @@
 <svelte:head>
 	<title>Boden Harris | Computer Science Portfolio</title>
 	<meta name="description" content="Portfolio of Boden Harris, a Computer Science student at UMass Amherst building full-stack web applications, games, and systems projects." />
-	<meta name="theme-color" content={theme === 'dark' ? '#080b16' : '#f5f7fb'} />
+	<meta name="theme-color" content={theme === 'dark' ? '#04050d' : '#e9ecfb'} />
 </svelte:head>
 
 <div class="site-shell">
+	<Starfield />
 	<a class="skip-link" href="#main-content">Skip to content</a>
 
 	<header class="site-header">
 		<div class="header-inner">
 		<a class="brand" href="#top" aria-label="Boden Harris home">
-			<span class="brand-mark" aria-hidden="true">BH</span>
+			<span class="brand-mark" aria-hidden="true"><span>BH</span></span>
 			<span>Boden Harris</span>
 		</a>
 		<nav aria-label="Primary navigation">
@@ -215,13 +241,7 @@
 			<a href="#skills">Skills</a>
 			<a href="#contact">Contact</a>
 			<a class="nav-resume" href="/resume.pdf" target="_blank" rel="noreferrer">Résumé</a>
-			<button class="theme-toggle" type="button" on:click={toggleTheme} aria-label={`Use ${theme === 'dark' ? 'light' : 'dark'} theme`}>
-				{#if theme === 'dark'}
-					<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2" /><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" /></svg>
-				{:else}
-					<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7Z" /></svg>
-				{/if}
-			</button>
+			<CelestialToggle {theme} ontoggle={toggleTheme} />
 		</nav>
 		</div>
 	</header>
@@ -229,9 +249,8 @@
 	<main id="main-content">
 		<section class="hero" id="top">
 			<div class="hero-copy">
-				<p class="status-pill"><span class="status-dot" aria-hidden="true"></span>Open to software engineering internships</p>
 				<p class="eyebrow">Computer Science · UMass Amherst</p>
-				<h1>I build useful software from <span class="accent-text">interface to implementation.</span></h1>
+				<h1 class="visually-hidden">Boden Harris</h1>
 				<p class="hero-intro">
 					I’m Boden Harris, a Computer Science student interested in full-stack development,
 					game systems, and the details that make software reliable and enjoyable to use.
@@ -248,7 +267,11 @@
 			</div>
 
 			<div class="hero-profile">
-				<div class="portrait-frame"><img src="/profile.jpg" alt="Boden Harris" /></div>
+				<div class="orbit-system">
+					<span class="orbit orbit-outer" aria-hidden="true"><span class="satellite"></span></span>
+					<span class="orbit orbit-inner" aria-hidden="true"><span class="satellite small"></span></span>
+					<div class="portrait-frame"><img src="/profile.jpg" alt="Boden Harris" /></div>
+				</div>
 				<dl class="profile-facts">
 					<div><dt>Graduation</dt><dd>May 2028</dd></div>
 					<div><dt>GPA</dt><dd>3.97 / 4.00</dd></div>
@@ -266,6 +289,7 @@
 				{#each projects as project, index}
 					<article class:featured={project.featured} class="project-card" data-reveal style={`--delay: ${(index % 2) * 70}ms`}>
 						<div class="project-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</div>
+						<span class="planet" aria-hidden="true" style={`--hue: ${(index * 47 + 220) % 360}`}></span>
 						<div>
 							{#if project.featured || project.dates}
 								<p class="project-kicker">{[project.featured && 'Featured project', project.dates].filter(Boolean).join(' · ')}</p>
@@ -356,7 +380,7 @@
 				<p>The fastest way to reach me is by email. You can also use the form and I’ll respond as soon as I can.</p>
 				<a class="email-link" href="mailto:blharris@umass.edu">blharris@umass.edu</a>
 			</div>
-			<form data-reveal on:submit={handleSubmit} action="https://formspree.io/f/mldpwzlr" method="POST">
+			<form data-reveal onsubmit={handleSubmit} action="https://formspree.io/f/mldpwzlr" method="POST">
 				<label for="email">Your email</label>
 				<input id="email" type="email" name="email" autocomplete="email" required />
 				<label for="message">Message</label>
@@ -369,12 +393,14 @@
 		</section>
 	</main>
 
-	<footer>
-		<p>© {new Date().getFullYear()} Boden Harris</p>
-		<div>
-			<a href="https://github.com/bodenharris" target="_blank" rel="noreferrer">GitHub</a>
-			<a href="https://www.linkedin.com/in/boden-harris-a74897326/" target="_blank" rel="noreferrer">LinkedIn</a>
-			<a href="https://dollamenu.itch.io/" target="_blank" rel="noreferrer">itch.io</a>
-		</div>
-	</footer>
+	<div class="horizon">
+		<footer>
+			<p>© {new Date().getFullYear()} Boden Harris</p>
+			<div>
+				<a href="https://github.com/bodenharris" target="_blank" rel="noreferrer">GitHub</a>
+				<a href="https://www.linkedin.com/in/boden-harris-a74897326/" target="_blank" rel="noreferrer">LinkedIn</a>
+				<a href="https://dollamenu.itch.io/" target="_blank" rel="noreferrer">itch.io</a>
+			</div>
+		</footer>
+	</div>
 </div>
