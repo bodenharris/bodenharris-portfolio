@@ -1,42 +1,56 @@
-# Boden Harris — Portfolio
+# sv
 
-Personal portfolio website for Boden Harris, a Computer Science student at
-UMass Amherst seeking software engineering internship opportunities.
+Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
 
-## Live Website
+## Creating a project
 
-[Visit the portfolio](https://bodenharris.vercel.app/)
+If you're seeing this, you've probably already done this step. Congrats!
 
-## Features
+```sh
+# create a new project
+npx sv create my-app
+```
 
-- Pixel-art space theme: a low-res dithered starfield, pixel planets and sprites, and a pixelated portrait (hover for the photo); click the pixel moon to turn it into the sun (light theme)
-- Featured software and game-development projects
-- Work experience, leadership, and education
-- Downloadable résumé
-- Contact form
-- Accessible, mobile-friendly interface
+To recreate this project with the same configuration:
 
-## Featured Projects
+```sh
+# recreate this project
+npx sv@1.4.0 create --template minimal --types ts --add enhanced-img experimental="features:async,remoteFunctions" --install npm ./
+```
 
-- YourSplit — Workout-planning website (SvelteKit, Supabase, PostgreSQL)
-- The Wolf — Daily market-guessing game (SvelteKit, TimescaleDB)
-- PlaylistGenerator — Last.fm history to Spotify playlists (Python, Spotipy)
-- Unity Chess Engine
-- Assembly Interpreter
-- Independent Game Development
+## Adding features
 
-## Built With
+Add features to your project with `sv add`:
 
-- SvelteKit
-- TypeScript
-- Tailwind CSS
-- Vite
-- Vercel
+```sh
+npx sv add
+```
 
-## Run Locally
+For example, to add Tailwind CSS:
 
-```bash
-git clone https://github.com/bodenharris/bodenharris-portfolio.git
-cd bodenharris-portfolio
-npm install
+```sh
+npx sv add tailwindcss
+```
+
+## Developing
+
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+
+```sh
 npm run dev
+
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
+```
+
+## Building
+
+To create a production version of your app:
+
+```sh
+npm run build
+```
+
+You can preview the production build with `npm run preview`.
+
+> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
