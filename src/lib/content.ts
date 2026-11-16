@@ -8,12 +8,6 @@ export const profiles = [
 
 export const email = 'blharris@umass.edu';
 
-export const facts = [
-	{ label: 'Graduation', value: 'May 2028' },
-	{ label: 'GPA', value: '3.97 / 4.00' },
-	{ label: 'Focus', value: 'Software engineering' }
-];
-
 export type Project = {
 	name: string;
 	dates: string;

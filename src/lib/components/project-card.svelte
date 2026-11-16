@@ -19,23 +19,21 @@
 	]}
 	{@attach reveal((index % 2) * 70)}
 >
-	<span class="absolute top-6 right-6.5 z-1 font-display text-[0.65rem] text-muted-foreground" aria-hidden="true">
-		{String(index + 1).padStart(2, '0')}
-	</span>
-	<PixelPlanet
-		r={featured ? 14 : 6}
-		hue={(index * 47 + 220) % 360}
-		ring={featured}
-		class={featured
-			? 'absolute -top-6 -right-4 w-32 opacity-50 md:top-1/2 md:right-[5%] md:w-[clamp(8rem,20vw,15rem)] md:-translate-y-1/2 md:animate-[float_3s_steps(2)_infinite] md:opacity-100'
-			: 'absolute top-5.5 right-17.5 z-1 w-9 transition-transform duration-300 ease-[steps(3)] group-hover/card:-translate-y-2'}
-	/>
+	{#if featured}
+		<!-- one planet for the featured card; it sits beside the text on wide screens and is hidden on narrow ones -->
+		<PixelPlanet
+			r={14}
+			hue={(index * 47 + 220) % 360}
+			ring
+			class="absolute top-1/2 right-[5%] w-[clamp(8rem,20vw,15rem)] -translate-y-1/2 max-md:hidden"
+		/>
+	{/if}
 
 	<Card.Header class={['relative z-1', featured && 'md:max-w-[min(42rem,68%)]']}>
-		<p class="label-mono mb-3 pr-10 text-[1.2rem]">{kicker}</p>
+		<p class="label-mono mb-3 text-[1.25rem]">{kicker}</p>
 		<Card.Title
 			class={[
-				'pr-16 leading-[1.45]',
+				'leading-[1.45]',
 				featured ? 'drop-text text-[clamp(1.4rem,3vw,2.1rem)]' : 'text-[clamp(1rem,1.6vw,1.2rem)]'
 			]}
 		>
@@ -66,7 +64,6 @@
 					'gap-2 after:absolute after:inset-0 after:z-2 after:content-[""]'
 				]}
 			>
-				<span class="text-[0.55rem] group-hover/card:animate-[blink_0.7s_steps(1)_infinite]" aria-hidden="true">▶</span>
 				{project.link.label}<span aria-hidden="true">↗</span>
 			</a>
 		</Card.Footer>

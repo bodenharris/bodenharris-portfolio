@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { education, email, experience, facts, profiles, projects, skills } from '#lib/content.js';
+	import { education, email, experience, profiles, projects, skills } from '#lib/content.js';
 	import { reveal } from '#lib/reveal.js';
 	import { Badge } from '#lib/components/ui/badge/index.js';
 	import { Button } from '#lib/components/ui/button/index.js';
@@ -9,18 +9,11 @@
 	import Eyebrow from '#lib/components/eyebrow.svelte';
 	import Glyph from '#lib/components/glyph.svelte';
 	import PageSection from '#lib/components/page-section.svelte';
-	import PixelPlanet from '#lib/components/pixel-planet.svelte';
 	import Portrait from '#lib/components/portrait.svelte';
 	import ProjectCard from '#lib/components/project-card.svelte';
 	import profilePhoto from '#lib/assets/profile.jpg?enhanced';
 
 	const chipColors = ['var(--color-link)', 'var(--color-primary)', 'var(--color-highlight)', 'var(--color-shade)'];
-	const sparkles = [
-		{ at: 'top-[4%] left-[6%] size-5.5 text-primary', delay: '0s' },
-		{ at: 'right-[4%] bottom-[3%] size-3.5 text-link', delay: '0.5s' },
-		{ at: 'bottom-[14%] left-0 size-3.5 text-highlight', delay: '1s' },
-		{ at: 'top-[30%] right-[1%] size-3.5 text-foreground', delay: '1.5s' }
-	];
 </script>
 
 <svelte:head>
@@ -32,7 +25,7 @@
 </svelte:head>
 
 {#snippet meta(items: string[])}
-	<p class="flex flex-col items-end gap-0.5 text-right font-mono text-[1.15rem] leading-[1.1] text-muted-foreground max-sm:items-start max-sm:text-left">
+	<p class="flex flex-col items-end gap-0.5 text-right font-mono text-[1.3rem] leading-[1.1] text-muted-foreground max-sm:items-start max-sm:text-left">
 		{#each items as item (item)}<span>{item}</span>{/each}
 	</p>
 {/snippet}
@@ -49,7 +42,7 @@
 		<!-- an RPG text box -->
 		<div class="pixel-box relative mb-10 bg-card max-w-2xl animate-rise px-5 pt-5 pb-7 sm:px-7 sm:pt-6 sm:pb-8"
 			style:animation-delay="80ms">
-			<p class="text-[clamp(1.2rem,1.7vw,1.4rem)] leading-relaxed">
+			<p class="text-[clamp(1.2rem,1.7vw,1.35rem)] leading-relaxed">
 				I’m Boden Harris, a Computer Science student interested in full-stack development, game systems, and
 				the details that make software reliable and enjoyable to use.
 			</p>
@@ -70,7 +63,7 @@
 						rel="noreferrer"
 						class="font-mono text-[1.35rem] text-muted-foreground uppercase hover:bg-primary hover:text-primary-foreground hover:shadow-[0_0_0_0.2rem_var(--color-primary)]"
 					>
-						{label} <span class="opacity-60" aria-hidden="true">↗</span>
+						{label}
 					</a>
 				</li>
 			{/each}
@@ -81,32 +74,17 @@
 	<div class="relative mx-auto w-full max-w-[min(100%-2.5rem,20rem)] animate-rise sm:max-w-88 md:max-w-100"
 		style:animation-delay="200ms">
 		<div class="relative aspect-square">
-			{#each sparkles as { at, delay } (at)}
-				<Glyph name="sparkle" class="absolute animate-[twinkle_2s_steps(2)_infinite] {at}" style="animation-delay: {delay}" />
-			{/each}
-			<PixelPlanet r={7} hue={190} class="absolute top-0 right-0 w-[18%] animate-[float_6s_steps(2)_infinite_reverse]" />
 			<div class="pixel-box absolute inset-[12%] animate-float bg-muted p-1 [--bc:var(--color-edge-bright)]">
 				<Portrait src={profilePhoto} alt="Boden Harris" />
 				<CowAbduction />
 			</div>
 		</div>
-
-		<dl class="pixel-box relative bg-card z-2 mt-6 grid grid-cols-3">
-			{#each facts as { label, value }, i (label)}
-				<div class={['px-2.5 py-3 sm:px-3.5', i > 0 && 'shadow-[inset_4px_0_0_0_var(--color-line)]']}>
-					<dt class="label-mono mb-1.5 text-[1.1rem]">{label}</dt>
-					<dd class={['text-[0.9rem] leading-tight font-semibold sm:text-base', i < 2 && 'whitespace-nowrap']}>{value}</dd>
-				</div>
-			{/each}
-		</dl>
 	</div>
 </section>
 
 <PageSection
 	id="projects"
-	eyebrow="Selected work"
 	title="Projects"
-	intro="Products, systems, and games built to turn ideas into working experiences."
 	class="grid gap-x-7 gap-y-8 md:grid-cols-2"
 >
 	{#each projects as project, index (project.name)}
@@ -116,9 +94,7 @@
 
 <PageSection
 	id="experience"
-	eyebrow="Beyond the code"
 	title="Experience"
-	intro="Work, leadership, and team experience that shape how I collaborate and communicate."
 	class="grid gap-x-7 gap-y-8 md:grid-cols-2"
 >
 	{#each experience as group (group.label)}
@@ -143,7 +119,7 @@
 									{@render meta([role.dates, role.location].filter((x) => x !== undefined))}
 								{/if}
 							</div>
-							<ul class="flex flex-col gap-2 text-[1.05rem] leading-[1.55] text-muted-foreground">
+							<ul class="flex flex-col gap-2 text-[1.05rem] leading-relaxed text-muted-foreground">
 								{#each role.points as point (point)}
 									<li class="relative pl-4.5 before:absolute before:top-[0.6em] before:left-0 before:size-1.5 before:bg-shade">
 										{point}
@@ -160,9 +136,7 @@
 
 <PageSection
 	id="skills"
-	eyebrow="Education & toolkit"
 	title="Skills"
-	intro="Technologies and coursework from my studies and independent projects."
 	class="flex flex-col gap-8"
 >
 	<Card.Root {@attach reveal()}>
@@ -205,11 +179,10 @@
 
 <PageSection id="contact" class="grid gap-12 md:grid-cols-[minmax(0,0.95fr)_minmax(20rem,0.75fr)] md:gap-[clamp(3rem,8vw,7rem)]">
 	<div {@attach reveal()}>
-		<Eyebrow>Get in touch</Eyebrow>
 		<h2 class="drop-text mb-6 text-[clamp(1.25rem,2.6vw,1.9rem)] leading-normal">
 			Let’s talk about an opportunity or project.
 		</h2>
-		<p class="leading-relaxed text-muted-foreground">
+		<p class="leading-relaxed">
 			The fastest way to reach me is by email. You can also use the form and I’ll respond as soon as I can.
 		</p>
 		<a
