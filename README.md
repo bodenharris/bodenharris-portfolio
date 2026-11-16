@@ -1,42 +1,24 @@
 # Boden Harris — Portfolio
 
-Personal portfolio website for Boden Harris, a Computer Science student at
-UMass Amherst seeking software engineering internship opportunities.
+Personal portfolio of Boden Harris, a Computer Science student at UMass Amherst, with a pixel-art space theme. Live at [bodenharris.vercel.app](https://bodenharris.vercel.app/).
 
-## Live Website
+## Tech Stack
 
-[Visit the portfolio](https://bodenharris.vercel.app/)
+- **[Svelte](https://svelte.dev)** (Svelte 5) - frontend framework
+- **[SvelteKit](https://svelte.dev/docs/kit)** (SvelteKit 3) - full-stack framework, deployed with the Vercel adapter
+- **[Tailwind CSS](https://tailwindcss.com)** (Tailwind 4) - styling
+- **[shadcn-svelte](https://shadcn-svelte.com)** - UI components (built on **[bits-ui](https://bits-ui.com)**)
 
-## Features
+## Getting Started
 
-- Pixel-art space theme: a low-res dithered starfield, pixel planets and sprites, and a framed profile photo; click the pixel moon to turn it into the sun (light theme)
-- Featured software and game-development projects
-- Work experience, leadership, and education
-- Downloadable résumé
-- Contact form
-- Accessible, mobile-friendly interface
-
-## Featured Projects
-
-- YourSplit — Workout-planning website (SvelteKit, Supabase, PostgreSQL)
-- The Wolf — Daily market-guessing game (SvelteKit, TimescaleDB)
-- PlaylistGenerator — Last.fm history to Spotify playlists (Python, Spotipy)
-- Unity Chess Engine
-- Assembly Interpreter
-- Independent Game Development
-
-## Built With
-
-- SvelteKit
-- TypeScript
-- Tailwind CSS
-- Vite
-- Vercel
-
-## Run Locally
-
-```bash
-git clone https://github.com/bodenharris/bodenharris-portfolio.git
-cd bodenharris-portfolio
-npm install
+```sh
+npm i
 npm run dev
+```
+
+## Where things live
+
+- `src/lib/content.ts` - all the text: projects, experience, skills, links
+- `src/routes/layout.css` - theme colours (day and night) and the pixel utilities
+- `src/lib/pixel/` - the canvas art: starfield, footer horizon, sprites
+- `src/lib/contact.remote.ts` - the contact form, forwarded to Formspree

@@ -1,0 +1,311 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn-svelte/tailwind.css';
+@import '@fontsource-variable/pixelify-sans';
+@import '@fontsource/press-start-2p';
+@import '@fontsource/vt323';
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Pixel-art space theme. Palette based on Sweetie 16; every edge is a hard 4px step.
+ * The shadcn tokens map onto the palette, plus a few extras the pixel art needs.
+ */
+
+/* Day */
+:root {
+	--background: #dcebf7;
+	--foreground: #1a1c2c;
+	--card: #fbfbf6;
+	--card-foreground: #1a1c2c;
+	--popover: #fbfbf6;
+	--popover-foreground: #1a1c2c;
+	--primary: #ffcd75;
+	--primary-foreground: #1a1c2c;
+	--secondary: #fbfbf6;
+	--secondary-foreground: #1a1c2c;
+	--muted: #e9eff5;
+	--muted-foreground: #3c4660;
+	--accent: #ffffff;
+	--accent-foreground: #1a1c2c;
+	--destructive: #b13e53;
+	--border: #1a1c2c;
+	--input: #1a1c2c;
+	--ring: #2f4fb8;
+	--radius: 0;
+
+	--sky: linear-gradient(
+		180deg,
+		#9fcdef 0 18%,
+		#b3d8f2 18% 36%,
+		#c7e2f4 36% 54%,
+		#dbebf5 54% 72%,
+		#ece9ea 72% 88%,
+		#fbe3cf 88%
+	);
+	--edge: #1a1c2c;
+	--edge-bright: #1a1c2c;
+	--drop: #8aa3bb;
+	--well: #c2cddb;
+	--line: #c2cddb;
+	--link: #2f4fb8;
+	--kicker: #1d6670;
+	--highlight: #257b3f;
+	--role: #b13e53;
+	--featured: #3b5dc9;
+	--shade: #ef7d57;
+	--glint: #fff4cf;
+	--caret: #ef7d57;
+	--hover-link: #b13e53;
+
+	color-scheme: light;
+}
+
+/* Night (the default) */
+.dark {
+	--background: #11132a;
+	--foreground: #f4f4f4;
+	--card: #181b33;
+	--card-foreground: #f4f4f4;
+	--popover: #181b33;
+	--popover-foreground: #f4f4f4;
+	--primary: #ffcd75;
+	--primary-foreground: #1a1c2c;
+	--secondary: #181b33;
+	--secondary-foreground: #f4f4f4;
+	--muted: #10122a;
+	--muted-foreground: #a9bccd;
+	--accent: #1e2240;
+	--accent-foreground: #f4f4f4;
+	--destructive: #ef7d57;
+	--border: #4a5578;
+	--input: #4a5578;
+	--ring: #73eff7;
+
+	--sky: linear-gradient(
+		180deg,
+		#0b0c1a 0 18%,
+		#0e1022 18% 36%,
+		#11132a 36% 54%,
+		#151731 54% 72%,
+		#191a38 72% 88%,
+		#1d1c3d 88%
+	);
+	--edge: #94b0c2;
+	--edge-bright: #f4f4f4;
+	--drop: #07080f;
+	--well: #07080f;
+	--line: #333c57;
+	--link: #73eff7;
+	--kicker: #73eff7;
+	--highlight: #a7f070;
+	--role: #ffcd75;
+	--featured: #73eff7;
+	--shade: #ef7d57;
+	--glint: #fff1c4;
+	--caret: #ffcd75;
+	--hover-link: #ffcd75;
+
+	color-scheme: dark;
+}
+
+@theme inline {
+	--font-sans: 'Pixelify Sans Variable', ui-sans-serif, system-ui, sans-serif;
+	--font-display: 'Press Start 2P', 'Pixelify Sans Variable', ui-sans-serif, sans-serif;
+	--font-mono: 'VT323', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+	--color-ring: var(--ring);
+	--color-input: var(--input);
+	--color-border: var(--border);
+	--color-destructive: var(--destructive);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-accent: var(--accent);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-muted: var(--muted);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-secondary: var(--secondary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-primary: var(--primary);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-popover: var(--popover);
+	--color-card-foreground: var(--card-foreground);
+	--color-card: var(--card);
+	--color-foreground: var(--foreground);
+	--color-background: var(--background);
+
+	--color-edge: var(--edge);
+	--color-edge-bright: var(--edge-bright);
+	--color-drop: var(--drop);
+	--color-line: var(--line);
+	--color-link: var(--link);
+	--color-kicker: var(--kicker);
+	--color-highlight: var(--highlight);
+	--color-role: var(--role);
+	--color-featured: var(--featured);
+	--color-shade: var(--shade);
+	--color-caret: var(--caret);
+	--color-hover-link: var(--hover-link);
+
+	--radius-sm: 0;
+	--radius-md: 0;
+	--radius-lg: 0;
+	--radius-xl: 0;
+	--radius-2xl: 0;
+	--radius-3xl: 0;
+	--radius-4xl: 0;
+}
+
+@theme {
+	--text-label: 1.3rem;
+
+	/* Every animation moves in whole frames, like a sprite. */
+	--animate-blink: blink 0.8s steps(1) infinite;
+	--animate-twinkle: twinkle 2.4s steps(2) infinite;
+	--animate-bob: bob 1s steps(1) infinite;
+	--animate-float: float 4s steps(2) infinite;
+	--animate-rise: rise 500ms steps(5) both;
+	--animate-sun-pulse: sun-pulse 1.6s steps(1) infinite;
+
+	@keyframes blink {
+		50% {
+			opacity: 0;
+		}
+	}
+	@keyframes twinkle {
+		0%,
+		100% {
+			opacity: 1;
+			transform: scale(1);
+		}
+		50% {
+			opacity: 0.45;
+			transform: scale(0.6);
+		}
+	}
+	@keyframes bob {
+		50% {
+			transform: translateY(4px);
+		}
+	}
+	@keyframes float {
+		50% {
+			transform: translateY(-4px);
+		}
+	}
+	@keyframes sun-pulse {
+		50% {
+			transform: scale(1.0625);
+		}
+	}
+	@keyframes rise {
+		from {
+			opacity: 0;
+			transform: translateY(16px);
+		}
+	}
+}
+
+/*
+ * A panel with a notched 4px outline and a hard drop shadow, drawn with box-shadows
+ * so the corners stay stepped like hand-placed pixels. Set --bc / --drop-h to vary it,
+ * and pair it with a background such as bg-card.
+ */
+@utility pixel-box {
+	box-shadow:
+		0 -4px 0 0 var(--bc, var(--color-border)),
+		0 4px 0 0 var(--bc, var(--color-border)),
+		-4px 0 0 0 var(--bc, var(--color-border)),
+		4px 0 0 0 var(--bc, var(--color-border)),
+		0 calc(4px + var(--drop-h, 8px)) 0 0 var(--color-drop),
+		inset 0 4px 0 0 color-mix(in srgb, var(--color-foreground) 6%, transparent);
+}
+
+/* Button bevel: set --btn-bc (outline), --btn-shade (bottom-right) and --btn-glint (top-left). */
+@utility pixel-button {
+	box-shadow:
+		0 -4px 0 0 var(--btn-bc, var(--color-edge)),
+		0 4px 0 0 var(--btn-bc, var(--color-edge)),
+		-4px 0 0 0 var(--btn-bc, var(--color-edge)),
+		4px 0 0 0 var(--btn-bc, var(--color-edge)),
+		0 8px 0 0 var(--color-drop),
+		inset -4px -4px 0 0 var(--btn-shade, var(--color-muted)),
+		inset 4px 4px 0 0 var(--btn-glint, transparent);
+}
+
+/* Section headings and big titles get a hard pixel drop shadow. */
+@utility drop-text {
+	text-shadow: 4px 4px 0 var(--color-drop);
+}
+
+/* Small uppercase VT323 labels used across the site; pair with a size such as text-label. */
+@utility label-mono {
+	font-family: var(--font-mono);
+	line-height: 1;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	color: var(--color-kicker);
+}
+
+/* Canvas art is drawn small and scaled up with nearest-neighbour sampling. */
+@utility pixelated {
+	image-rendering: pixelated;
+	image-rendering: crisp-edges;
+}
+
+@layer base {
+	* {
+		@apply border-border outline-ring;
+	}
+	html {
+		@apply bg-background font-sans;
+		scroll-behavior: smooth;
+		font-synthesis: none;
+	}
+	body {
+		@apply min-w-80 text-foreground;
+		font-size: 1.12rem;
+	}
+	h1,
+	h2,
+	h3,
+	h4 {
+		@apply font-display font-normal;
+	}
+	::selection {
+		@apply bg-primary text-primary-foreground;
+	}
+	:focus-visible {
+		outline: 4px solid var(--color-ring);
+		outline-offset: 4px;
+	}
+
+	/* The theme change sweeps out from the clicked moon/sun (see theme-toggle.svelte). */
+	::view-transition-old(root),
+	::view-transition-new(root) {
+		animation: none;
+		mix-blend-mode: normal;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		html {
+			scroll-behavior: auto;
+		}
+		*,
+		*::before,
+		*::after {
+			animation: none !important;
+			transition-duration: 0.01ms !important;
+		}
+	}
+}
+
+/* Scroll reveal, choppy and frame-by-frame (see reveal.ts). Only applied once JS runs. */
+[data-reveal] {
+	transition:
+		opacity 400ms steps(4) var(--delay, 0ms),
+		transform 400ms steps(4) var(--delay, 0ms);
+}
+[data-reveal='hidden'] {
+	opacity: 0;
+	transform: translateY(16px);
+}

@@ -1,26 +1,44 @@
 {
-	"name": "learrning-sveltekit",
+	"name": "bodenharris-portfolio",
 	"version": "0.0.1",
-	"type": "module", "engines": {
-    "node": "22.x"
-  	},
+	"private": true,
+	"type": "module",
+	"engines": {
+		"node": "24.x"
+	},
+	"imports": {
+		"#lib": "./src/lib/index.js",
+		"#lib/*": "./src/lib/*"
+	},
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
+		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-auto": "^3.0.0",
-		"@sveltejs/adapter-vercel": "^5.5.2",
-		"@sveltejs/kit": "^2.9.0",
-		"@sveltejs/vite-plugin-svelte": "^5.0.0",
-		"autoprefixer": "^10.4.20",
-		"svelte": "^5.0.0",
-		"svelte-check": "^4.0.0",
-		"tailwindcss": "^3.4.9",
-		"typescript": "^5.0.0",
-		"vite": "^6.0.0"
+		"@fontsource-variable/pixelify-sans": "^5.3.0",
+		"@fontsource/press-start-2p": "^5.3.0",
+		"@fontsource/vt323": "^5.3.0",
+		"@internationalized/date": "^3.12.4",
+		"@lucide/svelte": "^1.73.0",
+		"@sveltejs/adapter-vercel": "^7.0.0",
+		"@sveltejs/enhanced-img": "^1.0.0",
+		"@sveltejs/kit": "^3.0.0",
+		"@sveltejs/vite-plugin-svelte": "^7.2.0",
+		"@tailwindcss/vite": "^4.3.0",
+		"bits-ui": "^2.21.0",
+		"cn": "^0.5.2",
+		"shadcn-svelte": "^1.8.1",
+		"svelte": "^5.57.2",
+		"svelte-check": "^4.6.0",
+		"tailwind-variants": "^3.3.1",
+		"tailwindcss": "^4.3.0",
+		"tw-animate-css": "^1.4.0",
+		"typescript": "^6.0.3",
+		"valibot": "^1.5.0",
+		"vite": "^8.3.0"
 	}
 }

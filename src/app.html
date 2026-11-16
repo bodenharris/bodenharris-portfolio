@@ -1,27 +1,17 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
 	<head>
 		<meta charset="utf-8" />
-		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			rel="stylesheet"
-			href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Press+Start+2P&family=VT323&display=swap"
-		/>
+		<meta name="text-scale" content="scale" />
+		<link rel="icon" href="%sveltekit.assets%/favicon.svg" type="image/svg+xml" />
 		<script>
-			(function () {
-				try {
-					var t = localStorage.getItem('portfolio-theme');
-					if (t !== 'light' && t !== 'dark') {
-						t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-					}
-					document.documentElement.dataset.theme = t;
-				} catch (e) {
-					document.documentElement.dataset.theme = 'dark';
-				}
-			})();
+			// Pick the theme before first paint: saved choice, else the OS preference, else night.
+			try {
+				var t = localStorage.getItem('portfolio-theme');
+				if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+				document.documentElement.classList.toggle('dark', t === 'dark');
+			} catch (e) {}
 		</script>
 		%sveltekit.head%
 	</head>
