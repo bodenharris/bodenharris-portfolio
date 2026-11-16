@@ -33,7 +33,7 @@
 		<footer
 			class="relative mx-auto flex w-[min(1180px,100%-3rem)] items-center justify-between gap-8 pt-4 pb-12 text-muted-foreground max-md:w-[min(100%-2rem,42rem)] max-sm:flex-col max-sm:items-start max-sm:gap-4"
 		>
-			<p class="font-display text-[0.6rem]">© {new Date().getFullYear()} Boden Harris</p>
+			<p class="font-display text-[0.7rem]">© {new Date().getFullYear()} Boden Harris</p>
 			<div class="flex flex-wrap gap-6">
 				{#each profiles as { label, href } (href)}
 					<a

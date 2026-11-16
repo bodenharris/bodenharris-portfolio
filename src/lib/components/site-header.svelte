@@ -30,7 +30,7 @@
 			{#each links as { href, label } (href)}
 				<a
 					{href}
-					class="group relative py-2.5 pr-3 pl-5 font-display text-[0.6rem] text-muted-foreground uppercase hover:text-foreground focus-visible:text-foreground max-md:hidden"
+					class="group relative py-2.5 pr-3 pl-5 font-display text-[0.7rem] text-muted-foreground uppercase hover:text-foreground focus-visible:text-foreground max-md:hidden"
 				>
 					<!-- the classic menu cursor -->
 					<Glyph
