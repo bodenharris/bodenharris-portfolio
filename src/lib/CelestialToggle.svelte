@@ -1,17 +1,15 @@
 <script lang="ts">
 	let {
 		theme,
-		size = 'sm',
 		ontoggle
 	}: {
 		theme: 'light' | 'dark';
-		size?: 'sm' | 'lg';
 		ontoggle: (event: MouseEvent) => void;
 	} = $props();
 </script>
 
 <button
-	class="celestial {size}"
+	class="celestial"
 	type="button"
 	onclick={ontoggle}
 	aria-label={theme === 'dark' ? 'Switch to light theme (turn the moon into the sun)' : 'Switch to dark theme (turn the sun into the moon)'}
@@ -45,9 +43,6 @@
 		cursor: pointer;
 		-webkit-tap-highlight-color: transparent;
 	}
-	.celestial.lg {
-		--d: clamp(5.5rem, 11vw, 8.5rem);
-	}
 	.celestial:focus-visible {
 		outline: 2px solid var(--accent);
 		outline-offset: 6px;
@@ -75,11 +70,6 @@
 		transition:
 			transform 900ms cubic-bezier(0.65, 0, 0.35, 1),
 			box-shadow 700ms ease;
-	}
-	.lg .orb {
-		box-shadow:
-			inset -0.6em -0.7em 1.4em rgba(40, 46, 70, 0.5),
-			0 0 2.4em rgba(200, 215, 255, 0.35);
 	}
 
 	.crater {
@@ -139,11 +129,6 @@
 			inset -0.1em -0.1em 0.4em rgba(255, 120, 0, 0.35),
 			0 0 1em rgba(255, 180, 60, 0.75);
 	}
-	:global(:root[data-theme='light']) .lg .orb {
-		box-shadow:
-			inset -0.4em -0.4em 1.2em rgba(255, 120, 0, 0.35),
-			0 0 3em rgba(255, 170, 50, 0.65);
-	}
 	:global(:root[data-theme='light']) .celestial:hover .orb {
 		transform: rotate(-192deg);
 	}
@@ -161,17 +146,8 @@
 	:global(:root[data-theme='light']) .halo {
 		background: radial-gradient(circle, rgba(255, 196, 80, 0.45), transparent 68%);
 	}
-	:global(:root[data-theme='light']) .lg .rays {
-		animation: spin 40s linear infinite;
-	}
-
-	@keyframes spin {
-		from { rotate: 0deg; }
-		to { rotate: 360deg; }
-	}
 
 	@media (prefers-reduced-motion: reduce) {
 		.orb, .rays, .crater, .sun-face, .halo { transition: none; }
-		.rays { animation: none !important; }
 	}
 </style>

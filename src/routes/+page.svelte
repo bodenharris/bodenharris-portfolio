@@ -271,9 +271,6 @@
 					<span class="orbit orbit-outer" aria-hidden="true"><span class="satellite"></span></span>
 					<span class="orbit orbit-inner" aria-hidden="true"><span class="satellite small"></span></span>
 					<div class="portrait-frame"><img src="/profile.jpg" alt="Boden Harris" /></div>
-					<div class="hero-moon">
-						<CelestialToggle {theme} size="lg" ontoggle={toggleTheme} />
-					</div>
 				</div>
 				<dl class="profile-facts">
 					<div><dt>Graduation</dt><dd>May 2028</dd></div>
