@@ -52,14 +52,37 @@
 	];
 
 	onMount(() => {
-		const storedTheme = localStorage.getItem('portfolio-theme') as Theme | null;
-		if (storedTheme === 'light' || storedTheme === 'dark') theme = storedTheme;
-		else if (window.matchMedia('(prefers-color-scheme: light)').matches) theme = 'light';
+		const current = document.documentElement.dataset.theme;
+		theme = current === 'light' ? 'light' : 'dark';
+
+		const targets = document.querySelectorAll('[data-reveal]');
+		if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+			targets.forEach((el) => el.classList.add('revealed'));
+			return;
+		}
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (entry.isIntersecting) {
+						entry.target.classList.add('revealed');
+						observer.unobserve(entry.target);
+					}
+				}
+			},
+			{ rootMargin: '0px 0px -8% 0px', threshold: 0.08 }
+		);
+		targets.forEach((el) => observer.observe(el));
+		return () => observer.disconnect();
 	});
 
 	function toggleTheme() {
 		theme = theme === 'dark' ? 'light' : 'dark';
-		localStorage.setItem('portfolio-theme', theme);
+		document.documentElement.dataset.theme = theme;
+		try {
+			localStorage.setItem('portfolio-theme', theme);
+		} catch {
+			/* storage unavailable */
+		}
 	}
 
 	async function handleSubmit(event: SubmitEvent) {
@@ -90,10 +113,11 @@
 	<meta name="theme-color" content={theme === 'dark' ? '#080b16' : '#f5f7fb'} />
 </svelte:head>
 
-<div class:light={theme === 'light'} class="site-shell">
+<div class="site-shell">
 	<a class="skip-link" href="#main-content">Skip to content</a>
 
 	<header class="site-header">
+		<div class="header-inner">
 		<a class="brand" href="#top" aria-label="Boden Harris home">
 			<span class="brand-mark" aria-hidden="true">BH</span>
 			<span>Boden Harris</span>
@@ -104,16 +128,22 @@
 			<a href="#contact">Contact</a>
 			<a class="nav-resume" href="/resume.pdf" target="_blank" rel="noreferrer">Résumé</a>
 			<button class="theme-toggle" type="button" on:click={toggleTheme} aria-label={`Use ${theme === 'dark' ? 'light' : 'dark'} theme`}>
-				{theme === 'dark' ? 'Light' : 'Dark'}
+				{#if theme === 'dark'}
+					<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2" /><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" /></svg>
+				{:else}
+					<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7Z" /></svg>
+				{/if}
 			</button>
 		</nav>
+		</div>
 	</header>
 
 	<main id="main-content">
 		<section class="hero" id="top">
 			<div class="hero-copy">
+				<p class="status-pill"><span class="status-dot" aria-hidden="true"></span>Open to software engineering internships</p>
 				<p class="eyebrow">Computer Science · UMass Amherst</p>
-				<h1>I build useful software from interface to implementation.</h1>
+				<h1>I build useful software from <span class="accent-text">interface to implementation.</span></h1>
 				<p class="hero-intro">
 					I’m Boden Harris, a Computer Science student interested in full-stack development,
 					game systems, and the details that make software reliable and enjoyable to use.
@@ -140,13 +170,13 @@
 		</section>
 
 		<section class="section" id="projects">
-			<div class="section-heading">
+			<div class="section-heading" data-reveal>
 				<div><p class="eyebrow">Selected work</p><h2>Projects</h2></div>
 				<p>Products, systems, and games built to turn ideas into working experiences.</p>
 			</div>
 			<div class="project-grid">
 				{#each projects as project, index}
-					<article class:featured={project.featured} class="project-card">
+					<article class:featured={project.featured} class="project-card" data-reveal style={`--delay: ${(index % 2) * 70}ms`}>
 						<div class="project-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</div>
 						<div>
 							{#if project.featured}<p class="project-kicker">Featured project</p>{/if}
@@ -165,13 +195,13 @@
 		</section>
 
 		<section class="section" id="skills">
-			<div class="section-heading">
+			<div class="section-heading" data-reveal>
 				<div><p class="eyebrow">Technical toolkit</p><h2>Skills</h2></div>
 				<p>Technologies I have used across coursework and independent projects.</p>
 			</div>
 			<div class="skill-grid">
 				{#each skillGroups as group}
-					<div class="skill-group">
+					<div class="skill-group" data-reveal>
 						<h3>{group.label}</h3>
 						<ul>{#each group.items as item}<li>{item}</li>{/each}</ul>
 					</div>
@@ -180,13 +210,13 @@
 		</section>
 
 		<section class="section contact-section" id="contact">
-			<div class="contact-copy">
+			<div class="contact-copy" data-reveal>
 				<p class="eyebrow">Get in touch</p>
 				<h2>Let’s talk about an opportunity or project.</h2>
 				<p>The fastest way to reach me is by email. You can also use the form and I’ll respond as soon as I can.</p>
 				<a class="email-link" href="mailto:blharris@umass.edu">blharris@umass.edu</a>
 			</div>
-			<form on:submit={handleSubmit} action="https://formspree.io/f/mldpwzlr" method="POST">
+			<form data-reveal on:submit={handleSubmit} action="https://formspree.io/f/mldpwzlr" method="POST">
 				<label for="email">Your email</label>
 				<input id="email" type="email" name="email" autocomplete="email" required />
 				<label for="message">Message</label>
